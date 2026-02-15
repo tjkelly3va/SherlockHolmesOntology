@@ -16,8 +16,49 @@ ex:SherlockOntology a owl:Ontology ;
     dc:description "An ontology extracted from Arthur Conan Doyle's Sherlock Holmes stories." ;
     dc:creator "OWL Knowledge Engineer" ;
     dc:created "2026-02-10"^^xsd:date ;
+#   The ontology was revised on 2026-10-15 to add rdfs:seeAlso facts for each of the novels
     dc:source :studyInScarletDoc, :signOfTheFourDoc, :houndOfTheBaskervillesDoc,
         :valleyOfFearDoc .
+
+# ============================================================================
+# SOURCE PROVENANCE
+# ============================================================================
+
+:studyInScarletDoc a schema:Book ;
+    dc:title "A Study in Scarlet" ;
+    dc:creator "Arthur Conan Doyle" ;
+    dc:date "1887"^^xsd:gYear ;
+    dc:publisher "Ward, Lock & Co." ;
+    ex:narrativeYear "1881"^^xsd:gYear ;
+    ex:prefLabel "A Study in Scarlet" ;
+    rdfs:seeAlso "https://sherlock-holm.es/stories/plain-text/stud.txt" ;
+    ex:memberOfOntology ex:SherlockOntology .
+
+:signOfTheFourDoc a schema:Book ;
+    dc:title "The Sign of the Four" ;
+    dc:creator "Arthur Conan Doyle" ;
+    dc:date "1890"^^xsd:gYear ;
+    ex:narrativeYear "1888"^^xsd:gYear ;
+    ex:prefLabel "The Sign of the Four" ;
+    rdfs:seeAlso "https://sherlock-holm.es/stories/plain-text/sign.txt" ;
+    ex:memberOfOntology ex:SherlockOntology .
+
+:houndOfTheBaskervillesDoc a schema:Book ;
+    dc:title "The Hound of the Baskervilles" ;
+    dc:creator "Arthur Conan Doyle" ;
+    dc:date "1902"^^xsd:gYear ;
+    ex:narrativeYear "1889"^^xsd:gYear ;
+    ex:prefLabel "The Hound of the Baskervilles" ;
+    rdfs:seeAlso "https://sherlock-holm.es/stories/plain-text/houn.txt" ;
+    ex:memberOfOntology ex:SherlockOntology .
+
+:valleyOfFearDoc a schema:Book ;
+    dc:title "The Valley of Fear" ;
+    dc:creator "Arthur Conan Doyle" ;
+    dc:date "1915"^^xsd:gYear ;
+    ex:prefLabel "The Valley of Fear" ;
+    rdfs:seeAlso "https://sherlock-holm.es/stories/plain-text/vall.txt" ;
+    ex:memberOfOntology ex:SherlockOntology .
 
 # ============================================================================
 # CORE SUBPROPERTY DEFINITIONS
@@ -2049,19 +2090,6 @@ ex:medicalCondition a owl:DatatypeProperty ;
     dc:source :studyInScarletDoc .
 
 # ============================================================================
-# SOURCE PROVENANCE
-# ============================================================================
-
-:studyInScarletDoc a schema:Book ;
-    dc:title "A Study in Scarlet" ;
-    dc:creator "Arthur Conan Doyle" ;
-    dc:date "1887"^^xsd:gYear ;
-    dc:publisher "Ward, Lock & Co." ;
-    ex:narrativeYear "1881"^^xsd:gYear ;
-    ex:prefLabel "A Study in Scarlet" ;
-    ex:memberOfOntology ex:SherlockOntology .
-
-# ============================================================================
 # ADDITIONS FROM THE SIGN OF THE FOUR
 # ============================================================================
 
@@ -3023,18 +3051,6 @@ ex:physicalDescription a owl:DatatypeProperty ;
     dc:source :signOfTheFourDoc .
 
 # ============================================================================
-# SOURCE PROVENANCE — THE SIGN OF THE FOUR
-# ============================================================================
-
-:signOfTheFourDoc a schema:Book ;
-    dc:title "The Sign of the Four" ;
-    dc:creator "Arthur Conan Doyle" ;
-    dc:date "1890"^^xsd:gYear ;
-    ex:narrativeYear "1888"^^xsd:gYear ;
-    ex:prefLabel "The Sign of the Four" ;
-    ex:memberOfOntology ex:SherlockOntology .
-
-# ============================================================================
 # NEW CLASSES — The Hound of the Baskervilles
 # ============================================================================
 
@@ -3226,16 +3242,6 @@ ex:spouseOf a owl:ObjectProperty, owl:SymmetricProperty ;
 # ============================================================================
 # NEW INDIVIDUALS — The Hound of the Baskervilles
 # ============================================================================
-
-# --- Source Document ---
-
-:houndOfTheBaskervillesDoc a schema:Book ;
-    dc:title "The Hound of the Baskervilles" ;
-    dc:creator "Arthur Conan Doyle" ;
-    dc:date "1902"^^xsd:gYear ;
-    ex:narrativeYear "1889"^^xsd:gYear ;
-    ex:prefLabel "The Hound of the Baskervilles" ;
-    ex:memberOfOntology ex:SherlockOntology .
 
 # --- Persons ---
 
@@ -4002,15 +4008,6 @@ ex:pseudonym a owl:DatatypeProperty ;
 # ============================================================================
 # NEW INDIVIDUALS — The Valley of Fear
 # ============================================================================
-
-# --- Source Document ---
-
-:valleyOfFearDoc a schema:Book ;
-    dc:title "The Valley of Fear" ;
-    dc:creator "Arthur Conan Doyle" ;
-    dc:date "1915"^^xsd:gYear ;
-    ex:prefLabel "The Valley of Fear" ;
-    ex:memberOfOntology ex:SherlockOntology .
 
 # --- Persons ---
 
