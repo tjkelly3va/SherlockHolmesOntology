@@ -51,6 +51,24 @@ Complete story listing with publication years and source links is encoded in the
 
 The ontology is serialized in Turtle (.ttl) format and uses W3C standards: OWL 2 for class and property definitions, Dublin Core for provenance metadata, SKOS for alternate labels, and Schema.org for bibliographic typing.
 
+## Seven Orthogonal Pillars
+
+The ontology is organized around seven independently queryable dimensions. The first five represent the narrative world — every individual descends from exactly one top-level class with no shared parent, ensuring clean categorization. The sixth and seventh pillars (deductions and reviews) layer analytical and critical perspectives on top of the narrative content.
+
+| Pillar | Scope | Examples |
+|--------|-------|----------|
+| **Persons** | Agents: fictional characters and historical figures | Holmes, Watson, Irene Adler, Professor Moriarty |
+| **Locations** | Spatial entities at every scale, from rooms to countries | 221B Baker Street, Dartmoor, Vermissa Valley, Agra |
+| **Objects** | Physical things: documents, weapons, animals, vehicles | the Agra treasure, the Blue Carbuncle, the Hound |
+| **Events** | Occurrences with participants and locations | murders, investigations, journeys, trials |
+| **Organizations** | Groups, firms, institutions, criminal enterprises | Scotland Yard, the Scowrers, the Baker Street Irregulars |
+| **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 785 structured deduction instances with observation, reasoning chain, and conclusion |
+| **Reviews** | Literary critical analysis of each source document | themes, narrative structure, Doyle's craft — one per work |
+
+The deductions pillar captures each act of reasoning as a first-class entity: who made the deduction, what was observed, the logical chain connecting observation to conclusion, and the narrative outcome. This enables queries like "find all deductions where Holmes reasons from physical evidence" or "compare deductive methods across the canon."
+
+The reviews pillar provides a scholarly layer alongside the factual extraction, analyzing each of the sixty works for themes, narrative structure, character development, and Doyle's evolving craft across four decades of writing.
+
 ## Source Provenance and RAG Support
 
 Each source document is modeled as a named individual with full bibliographic metadata and a URL to the public domain text:
@@ -89,31 +107,13 @@ The merged ontology file is organized in clearly delimited sections:
 15. **Deductions** — 785 individual deduction instances capturing Holmes's (and others') reasoning
 16. **Reviews** — literary critical analysis for each of the sixty source documents
 
-## Key Modeling Decisions
-
-**Two-axis person classification.** Persons are classified along two independent axes: ontological status (`FictionalPerson` vs. `RealPerson`, mutually exclusive) and narrative role (`Detective`, `Criminal`, `Victim`, `Client`, etc., freely combinable). This avoids the modeling trap of making roles depend on fictionality. A character like Sherlock Holmes is typed as both `ex:FictionalPerson` and `ex:Detective` — the role class is a subclass of `ex:Person` directly, never nested under `FictionalPerson`.
-
-**Five orthogonal pillars.** Every individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap.
-
-**Cumulative enrichment.** When a character, location, or object appears in multiple works, new facts are added to the existing entity without modifying or removing anything established by earlier sources. Multiple `dc:source` values track which works contributed information. Sherlock Holmes carries source attributions from all sixty works.
-
-**Dual geographic containment.** Every location asserts both a transitive general property (`ex:locatedIn`) and a specific-level property (`ex:inCity`, `ex:inRegion`, `ex:inCountry`, `ex:inCounty`, `ex:inState`). Full chains are asserted explicitly — `221B Baker Street` links to Baker Street, London, England, and the United Kingdom — ensuring queryability without requiring a reasoner to resolve transitive chains.
-
-**ISO 3166-1 compliance.** Sovereign states are typed as `ex:Country` with ISO alpha-2 codes. Constituent parts of the United Kingdom (England, Scotland, Wales) are typed as `ex:Region`, not `ex:Country`.
-
-**Alias and identity handling.** Characters with multiple identities use `skos:altLabel` for display variants, `ex:alias` for in-story assumed names, and `ex:aliasOf`/`ex:hasAlias` object properties for formal identity linking between URI references. This is particularly important for characters like John Douglas / Jack McMurdo / Birdy Edwards in *The Valley of Fear*.
-
-**Deduction modeling.** Each deductive inference made by Holmes (and occasionally by other characters) is captured as a first-class entity with structured properties including the deducer, the observation, the reasoning chain, and the conclusion. The deductions index in the ontology provides forward links from each source document to its extracted deductions, enabling queries like "show all deductions in *The Speckled Band*" or "find all deductions where Holmes reasons from physical evidence."
-
-**Literary reviews.** Each source document carries a critical literary review analyzing themes, narrative structure, and Doyle's craft, providing a scholarly layer alongside the factual extraction.
-
 ## How the Ontology Was Built
 
 This ontology was built collaboratively by Tom Kelly (human knowledge engineer) and Claude (Anthropic, Claude Opus 4.6), working through an iterative development process that refined both the extraction methodology and the ontology itself over the course of all sixty works.
 
 ### The Processing Pipeline
 
-Each work followed a consistent pipeline governed by a consolidated extraction prompt:
+Each work followed a consistent pipeline governed by a consolidated extraction prompt (over 1,400 lines), which encoded every rule, convention, and hard-won lesson from the project's development:
 
 1. **Context budget assessment.** The source text was measured by word count and the baseline ontology by line count to determine processing mode. Short stories used a two-phase approach (reading in one conversation turn, extraction and generation in subsequent turns); longer novels required three-phase processing with intermediate extraction manifests. This assessment was mandatory — the most common failure mode in early development was attempting to read a text and extract from it in the same conversation turn, exhausting Claude's output token budget before the extraction scripts could be written.
 
@@ -132,10 +132,9 @@ Each work followed a consistent pipeline governed by a consolidated extraction p
 As the ontology grew beyond what could be efficiently processed in a single file, a split-file architecture was adopted. The ontology is maintained as eight working files:
 
 - **Baseline index** (`sherlock_baseline.ttl`) — schema definitions, recurring characters, entity stubs, source provenance, and the deductions index
-- **Six pillar files** — full definitions for persons, locations, objects, events, organizations, and deductions
-- **Reviews file** (`sherlock_reviews.ttl`) — literary critical reviews per source document
+- **Seven pillar files** — full definitions for persons, locations, objects, events, organizations, deductions, and literary critical reviews per source document
 
-This architecture reduces the generation script's read/write burden from the full ontology (56,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all eight files into a single `sherlock_ontology_complete.ttl` for querying, validation, and distribution.
+This architecture reduces the generation script's read/write burden from the full ontology (56,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all eight files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
 
 ### Context Window Management
 
@@ -153,25 +152,45 @@ Processing sixty works through an LLM with finite context windows required delib
 
 **Atomic script generation.** Structured output files (Turtle, JSON manifests) were always generated by a single Python script writing the complete file. Incremental generation across multiple tool calls — persons in one script, locations in the next — wasted tokens on inter-call narration and risked truncation. For very large entity sets (100+ entities), a two-step accumulator pattern was used: write entity data to an intermediate file first, then assemble the complete output in a second script, with zero narration between calls.
 
+**Custom skills as persistent memory.** Five custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), and `token-checkpoint-protocol` (context window monitoring and checkpoint management). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
+
 ### Quality Testing and Verification
 
 Quality assurance was built into every stage of the pipeline, not applied as a post-processing step:
 
-**Extraction benchmarks.** Expected entity counts per 50,000 words (40–80 persons, 30–60 locations, 20–50 objects, 5–15 organizations, 15–40 events) served as minimum thresholds. If counts fell below 70% of the expected range, processing stopped and the extraction was reviewed before proceeding.
+**Extraction benchmarks.** Expected entity counts per 50,000 words (40–80 persons, 30–60 locations, 20–50 objects, 5–15 organizations, 15–40 events) served as minimum thresholds. If counts fell below 70% of the expected range, processing stopped and the extraction was reviewed before proceeding. An explicit anti-curation rule — "if you catch yourself using 'major' or 'notable' to filter, you are curating, not extracting" — prevented Claude from skipping minor characters or background locations.
 
 **Mandatory review gate.** After extraction and before generation, entity counts and the complete entity name list were presented for human review. Generation could not begin without explicit approval. This gate caught misclassifications, missed entities, and naming inconsistencies that automated checks could not detect.
 
 **Post-generation verification.** Every generation run verified: each new entity had both a baseline stub and a pillar file definition; each enriched entity's stub had the new `dc:source` added; new schema terms were inserted in correct alphabetical position; no duplicate URIs existed; definitions were properly terminated; and spot-checks confirmed 3–5 entities matched expectations.
 
-**Periodic merge validation.** The merge process performed its own verification suite: entity count reconciliation across all pillar files, schema completeness checks, namespace normalization verification, duplicate subject detection, double-semicolon scanning (indicating punctuation errors), and cross-pillar duplicate detection (indicating extraction routing errors).
+**Periodic merge validation.** The merge process performed its own verification suite: entity count reconciliation across all pillar files, schema completeness checks, namespace normalization verification, duplicate subject detection, double-semicolon scanning (indicating punctuation errors), cross-pillar duplicate detection (indicating extraction routing errors), and standalone subject URI line checks to catch post-processing corruption.
 
 **Standards compliance.** The ontology follows W3C OWL 2 specifications, with every class, property, and individual carrying four mandatory annotations (`ex:prefLabel`, `ex:description`, `ex:memberOfOntology`, `dc:source`). Every object property declares domain and range. Every property definition includes inverse relationships where applicable. Symmetric properties (`ex:isMarriedTo`, `ex:siblingOf`) are declared as `owl:SymmetricProperty`. Disjoint classes (`FictionalPerson` and `RealPerson`) are formally declared.
+
+## Key Modeling Decisions
+
+**Two-axis person classification.** Persons are classified along two independent axes: ontological status (`FictionalPerson` vs. `RealPerson`, mutually exclusive) and narrative role (`Detective`, `Criminal`, `Victim`, `Client`, etc., freely combinable). This avoids the modeling trap of making roles depend on fictionality. A character like Sherlock Holmes is typed as both `ex:FictionalPerson` and `ex:Detective` — the role class is a subclass of `ex:Person` directly, never nested under `FictionalPerson`.
+
+**Five orthogonal entity pillars.** Every individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap.
+
+**Cumulative enrichment.** When a character, location, or object appears in multiple works, new facts are added to the existing entity without modifying or removing anything established by earlier sources. Multiple `dc:source` values track which works contributed information. Sherlock Holmes carries source attributions from all sixty works.
+
+**Dual geographic containment.** Every location asserts both a transitive general property (`ex:locatedIn`) and a specific-level property (`ex:inCity`, `ex:inRegion`, `ex:inCountry`, `ex:inCounty`, `ex:inState`). Full chains are asserted explicitly — `221B Baker Street` links to Baker Street, London, England, and the United Kingdom — ensuring queryability without requiring a reasoner to resolve transitive chains.
+
+**ISO 3166-1 compliance.** Sovereign states are typed as `ex:Country` with ISO alpha-2 codes. Constituent parts of the United Kingdom (England, Scotland, Wales) are typed as `ex:Region`, not `ex:Country`.
+
+**Alias and identity handling.** Characters with multiple identities use `skos:altLabel` for display variants, `ex:alias` for in-story assumed names, and `ex:aliasOf`/`ex:hasAlias` object properties for formal identity linking between URI references. This is particularly important for characters like John Douglas / Jack McMurdo / Birdy Edwards in *The Valley of Fear*.
+
+**Deduction modeling.** Each deductive inference made by Holmes (and occasionally by other characters) is captured as a first-class entity with structured properties including the deducer, the observation, the reasoning chain, and the conclusion. The deductions index in the ontology provides forward links from each source document to its extracted deductions, enabling queries like "show all deductions in *The Speckled Band*" or "find all deductions where Holmes reasons from physical evidence."
+
+**Literary reviews.** Each source document carries a critical literary review analyzing themes, narrative structure, and Doyle's craft, providing a scholarly layer alongside the factual extraction.
 
 ### Claude's Role in Development
 
 Claude participated in this project at multiple levels, not just as an extraction engine:
 
-**Skill development.** Five custom skill files govern the project's methodology: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), and `token-checkpoint-protocol` (context window monitoring and checkpoint management). These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop.
+**Skill development.** Five custom skill files govern the project's methodology. These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop. The skills functioned as Claude's institutional memory, ensuring that lessons learned early in the project persisted across the hundreds of conversation turns required to process the full canon.
 
 **Prompt engineering.** The consolidated extraction prompt (over 1,400 lines) evolved across the project as new failure modes were discovered and addressed. Claude helped identify, diagnose, and codify solutions for problems like: regex-based block parsing failing on multi-line descriptions (`re.DOTALL` corruption), enrichment addenda being routed to wrong pillar files, alphabetical insertion algorithms splitting multi-line definitions, triple-quoted strings being misidentified as block boundaries, and punctuation normalization producing double semicolons. Each fix was expressed as both a rule and a code pattern in the prompt, with an explicit failure modes checklist growing to over thirty entries.
 
