@@ -4,6 +4,14 @@
 
 An RDF/OWL ontology extracted from Arthur Conan Doyle's complete Sherlock Holmes canon — four novels and fifty-six short stories — capturing the characters, locations, objects, organizations, events, deductions, and relationships that constitute the narrative world of the world's most famous detective.
 
+## Why This Exists
+
+In the Sherlock Holmes canon, which characters appear in more than one story? Who are Moriarty's known associates? What are Holmes's deductions in "The Adventure of the Speckled Band"? You could ask an AI chatbot like ChatGPT or Claude, and it might give you the right answers — but it might also make things up. These tools are known to "hallucinate": inventing characters who don't exist, attributing deductions to the wrong story, or confidently describing relationships that Doyle never wrote. They sound authoritative, but they have no reliable way to check their answers against the original texts.
+
+This project takes a different approach. Instead of relying on an AI's memory, it organizes everything from the Holmes stories — every character, location, object, event, organization, and deduction — into a structured knowledge base called an ontology. Think of it as a carefully indexed reference work where every fact is linked back to the specific story it came from. It doesn't guess, and it doesn't fill in gaps. If Holmes made a deduction in "The Speckled Band," it's recorded here with a direct link to that story. If a character appears in three stories, the ontology says exactly three — no more, no less. 
+
+The real power comes from combining these two technologies. An AI chatbot gives you the ability to ask questions in plain English; the ontology gives it a foundation of verified facts to draw on. Together, they can answer complex questions about the Holmes canon conversationally, point you to the specific stories that support each answer, and — just as importantly — hold back when the evidence isn't there rather than making something up.
+
 ## Scope
 
 The ontology covers all sixty works in the Sherlock Holmes canon. Source texts were obtained from the public domain archive at [sherlock-holm.es](https://sherlock-holm.es/), and each source document in the ontology includes an `rdfs:seeAlso` link to its plain-text source, supporting ingestion by separate RAG (Retrieval-Augmented Generation) pipelines.
@@ -289,5 +297,7 @@ The source texts from which the ontology was extracted are in the public domain.
 ## Acknowledgments
 
 Built collaboratively by Tom Kelly and Claude (Anthropic, Claude Opus 4.6), February–March 2026.
+
+Special thanks to Bob DuCharme (https://www.bobdc.com) for his contributions.
 
 Corrections, enhancement suggestions, and queries are invited. Please email comments to tjk45268@gmail.com.
