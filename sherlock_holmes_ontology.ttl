@@ -130,7 +130,6 @@ ex:reviewDetailed  a owl:DatatypeProperty ;
     ex:memberOfOntology ex:SherlockOntology .
 
 
-
 # ============================================================================
 # SOURCE PROVENANCE
 # ============================================================================
@@ -3348,6 +3347,19 @@ ex:Quarrel a owl:Class ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :solitaryCyclistDoc .
 
+ex:Quotation a owl:Class ;
+    rdfs:subClassOf ex:Event ;
+    ex:prefLabel "Quotation" ;
+    ex:description "A Quotation is a class representing a specific utterance of dialogue in the Holmes canon that has been identified as culturally significant, thematically important, or otherwise notable. Each Quotation instance records the exact words spoken, the speaker, the addressee(s), the narrative context, and links to related entities. Quotation is a subclass of Event because each utterance occurs at a specific moment in the narrative with participants and a setting." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:QuoteFamily a owl:Class ;
+    ex:prefLabel "Quote Family" ;
+    ex:description "A Quote Family is a class representing a group of related Quotation instances that express the same underlying idea, maxim, or catchphrase across multiple stories in the canon. The family's identity is anchored to the most widely known or culturally prominent version of the quote. A Quote Family may also represent a famous quote that does not actually appear in the canon (a Mandela-effect-only family)." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:RabbitWarren a owl:Class ;
     rdfs:subClassOf ex:Location ;
     ex:prefLabel "Rabbit Warren" ;
@@ -4313,6 +4325,14 @@ ex:accusedOf a owl:ObjectProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :berylCoronetDoc .
 
+ex:addressedTo a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:Person ;
+    ex:prefLabel "Addressed To" ;
+    ex:description "A 'Addressed To' is a relationship that connects a quotation to the person or persons to whom it was directly spoken." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:adopted a owl:ObjectProperty ;
     rdfs:domain ex:Person ;
     rdfs:range ex:Person ;
@@ -4620,6 +4640,14 @@ ex:brotherOf a owl:ObjectProperty, owl:SymmetricProperty ;
     ex:description "A 'Brother Of' is a relationship that connects a male person to their sibling." ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :greekInterpreterDoc .
+
+ex:canonicalQuote a owl:ObjectProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range ex:Quotation ;
+    ex:prefLabel "Canonical Quote" ;
+    ex:description "A 'Canonical Quote' is a relationship that connects a Quote Family to the single quotation instance whose wording is the most widely known and culturally established version." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
 
 ex:captainedBy a owl:ObjectProperty ;
     rdfs:domain ex:Object ;
@@ -5678,6 +5706,24 @@ ex:hasPerpetrator a owl:ObjectProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc .
 
+ex:hasQuoteFromSource a owl:ObjectProperty ;
+    rdfs:domain schema:CreativeWork ;
+    rdfs:range ex:Quotation ;
+    owl:inverseOf ex:quoteFromSource ;
+    ex:prefLabel "Has Quote from Source" ;
+    ex:description "A 'Has Quote from Source' is a relationship that connects a source document to a quotation extracted from it; inverse of ex:quoteFromSource." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:hasQuoteVariant a owl:ObjectProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range ex:Quotation ;
+    owl:inverseOf ex:memberOfQuoteFamily ;
+    ex:prefLabel "Has Quote Variant" ;
+    ex:description "A 'Has Quote Variant' is a relationship that connects a Quote Family to one of its individual quotation instances; inverse of ex:memberOfQuoteFamily." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:hasSecretary a owl:ObjectProperty ;
     rdfs:domain ex:Person ;
     rdfs:range ex:Person ;
@@ -6224,6 +6270,15 @@ ex:memberOf a owl:ObjectProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc .
 
+ex:memberOfQuoteFamily a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:QuoteFamily ;
+    owl:inverseOf ex:hasQuoteVariant ;
+    ex:prefLabel "Member of Quote Family" ;
+    ex:description "A 'Member of Quote Family' is a relationship that connects an individual quotation instance to the Quote Family it belongs to; inverse of ex:hasQuoteVariant." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:memberOfUnit a owl:ObjectProperty ;
     rdfs:domain ex:Person ;
     rdfs:range ex:MilitaryUnit ;
@@ -6577,6 +6632,39 @@ ex:pursues a owl:ObjectProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :finalProblemDoc .
 
+ex:quoteAssociatedWithDeduction a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:Deduction ;
+    ex:prefLabel "Quote Associated with Deduction" ;
+    ex:description "A 'Quote Associated with Deduction' is a relationship that connects a quotation to a deduction that it articulates, accompanies, or directly supports." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteAssociatedWithEvent a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:Event ;
+    ex:prefLabel "Quote Associated with Event" ;
+    ex:description "A 'Quote Associated with Event' is a relationship that connects a quotation to the narrative event during which it was spoken or to which it directly relates." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteFromSource a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range schema:CreativeWork ;
+    owl:inverseOf ex:hasQuoteFromSource ;
+    ex:prefLabel "Quote from Source" ;
+    ex:description "A 'Quote from Source' is a relationship that connects a quotation to the source document from which it was extracted; inverse of ex:hasQuoteFromSource." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteLocation a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:Location ;
+    ex:prefLabel "Quote Location" ;
+    ex:description "A 'Quote Location' is a relationship that connects a quotation to the location where it was spoken in the narrative." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:received a owl:ObjectProperty ;
     rdfs:domain ex:Person ;
     rdfs:range ex:Object ;
@@ -6928,6 +7016,24 @@ ex:spans a owl:ObjectProperty ;
     ex:description "A Spans is a relationship that connects a bridge to the body of water or obstacle it crosses." ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :thorBridgeDoc .
+
+ex:speakerOf a owl:ObjectProperty ;
+    rdfs:domain ex:Person ;
+    rdfs:range ex:Quotation ;
+    owl:inverseOf ex:spokenBy ;
+    ex:prefLabel "Speaker Of" ;
+    ex:description "A 'Speaker Of' is a relationship that connects a person to a quotation they uttered; inverse of ex:spokenBy." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:spokenBy a owl:ObjectProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range ex:Person ;
+    owl:inverseOf ex:speakerOf ;
+    ex:prefLabel "Spoken By" ;
+    ex:description "A 'Spoken By' is a relationship that connects a quotation to the person who uttered it." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
 
 ex:staysAt a owl:ObjectProperty ;
     rdfs:domain ex:Person ;
@@ -7356,6 +7462,14 @@ ex:birthYear a owl:DatatypeProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc .
 
+ex:canonicalForm a owl:DatatypeProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Canonical Form" ;
+    ex:description "A 'Canonical Form' is a string recording the most widely known and culturally established wording of a Quote Family's underlying idea." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:causeOfDeath a owl:DatatypeProperty ;
     rdfs:domain ex:Person ;
     rdfs:range xsd:string ;
@@ -7403,6 +7517,14 @@ ex:countryCode a owl:DatatypeProperty ;
     ex:description "A 'Country Code' is a string of the ISO 3166-1 alpha-2 country code for a sovereign state." ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc .
+
+ex:culturalAfterlife a owl:DatatypeProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Cultural Afterlife" ;
+    ex:description "A 'Cultural Afterlife' is a string providing a narrative account of the quote's life beyond the Holmes canon." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
 
 ex:deathDate a owl:DatatypeProperty ;
     rdfs:domain ex:Person ;
@@ -7689,6 +7811,22 @@ ex:maidenName a owl:DatatypeProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :crookedManDoc .
 
+ex:mandelaEffect a owl:DatatypeProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Mandela Effect" ;
+    ex:description "A 'Mandela Effect' is a string documenting cases where the popular memory of a quote diverges from what actually appears in the canon." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:mandelaEffectOnly a owl:DatatypeProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range xsd:boolean ;
+    ex:prefLabel "Mandela Effect Only" ;
+    ex:description "A 'Mandela Effect Only' is a boolean indicating that this Quote Family represents a famous quote widely attributed to the Holmes canon but not actually present in any of the sixty canonical works." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :crookedManDoc .
+
 ex:maritalStatus a owl:DatatypeProperty ;
     rdfs:domain ex:Person ;
     rdfs:range xsd:string ;
@@ -7835,6 +7973,14 @@ ex:postmark a owl:DatatypeProperty ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :gloriaScottDoc .
 
+ex:preCanonicalOrigin a owl:DatatypeProperty ;
+    rdfs:domain ex:QuoteFamily ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Pre-Canonical Origin" ;
+    ex:description "A 'Pre-Canonical Origin' is a string providing a narrative account of any earlier versions of the quote that appeared before the Holmes canon." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
 ex:price a owl:DatatypeProperty ;
     rdfs:domain ex:Object ;
     rdfs:range xsd:string ;
@@ -7867,6 +8013,46 @@ ex:publicationYear a owl:DatatypeProperty ;
     ex:description "A 'Publication Year' is a gYear recording the year in which a source document was first published." ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc .
+
+ex:quoteCategory a owl:DatatypeProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Quote Category" ;
+    ex:description "A 'Quote Category' is a string classifying the type of quotation; controlled vocabulary: 'philosophical maxim', 'deductive principle', 'aphorism', 'witticism', 'threat', 'self-description', 'observation on human nature', 'catchphrase', 'dramatic declaration', 'narrative passage'." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteNarrativeContext a owl:DatatypeProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Quote Narrative Context" ;
+    ex:description "A 'Quote Narrative Context' is a string describing the scene, conversation, or circumstances in which the quotation was spoken." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteNotable a owl:DatatypeProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range xsd:boolean ;
+    ex:prefLabel "Quote Notable" ;
+    ex:description "A 'Quote Notable' is a boolean indicating whether this particular variant is independently notable — widely recognized, frequently cited, or culturally significant in its own right." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteSpeakerLabel a owl:DatatypeProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Quote Speaker Label" ;
+    ex:description "A 'Quote Speaker Label' is a string recording how the speaker frames or introduces the quotation in context, such as 'my precept' or 'an old maxim of mine'." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+ex:quoteText a owl:DatatypeProperty ;
+    rdfs:domain ex:Quotation ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Quote Text" ;
+    ex:description "A 'Quote Text' is a string recording the exact words of a quotation as they appear in the source text." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
 
 ex:rank a owl:DatatypeProperty ;
     rdfs:domain ex:Person ;
@@ -9437,8 +9623,83 @@ ex:yearsOfService a owl:DatatypeProperty ;
 
 
 # ============================================================================
+# QUOTATIONS INDEX
+# ============================================================================
+
+#
+# Forward links from source documents to their quotation instances.
+# Each source document lists all quotations extracted from it via
+# ex:hasQuoteFromSource.
+#
+# Query example:
+#   SELECT ?quote WHERE {
+#       :signOfTheFourDoc ex:hasQuoteFromSource ?quote .
+#   }
+
+:studyInScarletDoc
+    ex:hasQuoteFromSource :q_studyInScarlet_cesspool ;
+    ex:hasQuoteFromSource :q_studyInScarlet_capitalMistake .
+
+:signOfTheFourDoc
+    ex:hasQuoteFromSource :q_signOfTheFour_ch1_eliminateFactors ;
+    ex:hasQuoteFromSource :q_signOfTheFour_ch6_eliminatedImpossible ;
+    ex:hasQuoteFromSource :q_signOfTheFour_ch6_knowMyMethods ;
+    ex:hasQuoteFromSource :q_signOfTheFour_irregulars .
+
+:scandalInBohemiaDoc
+    ex:hasQuoteFromSource :q_scandalInBohemia_theWoman ;
+    ex:hasQuoteFromSource :q_scandalInBohemia_capitalMistake ;
+    ex:hasQuoteFromSource :q_scandalInBohemia_seeNotObserve .
+
+:boscombeValleyMysteryDoc
+    ex:hasQuoteFromSource :q_boscombeValley_obviousFact .
+
+:caseOfIdentityDoc
+    ex:hasQuoteFromSource :q_caseOfIdentity_littleThings .
+
+:copperBeechesDoc
+    ex:hasQuoteFromSource :q_copperBeeches_vilestAlleys ;
+    ex:hasQuoteFromSource :q_copperBeeches_crimeLogic .
+
+:berylCoronetDoc
+    ex:hasQuoteFromSource :q_berylCoronet_excludedImpossible .
+
+:silverBlazeDoc
+    ex:hasQuoteFromSource :q_silverBlaze_dogNightTime .
+
+:crookedManDoc
+    ex:hasQuoteFromSource :q_crookedMan_elementary ;
+    ex:hasQuoteFromSource :q_crookedMan_knowMyMethods .
+
+:finalProblemDoc
+    ex:hasQuoteFromSource :q_finalProblem_napoleonCrime .
+
+:houndOfTheBaskervillesDoc
+    ex:hasQuoteFromSource :q_hound_giganticHound .
+
+:abbeyGrangeDoc
+    ex:hasQuoteFromSource :q_abbeyGrange_gameAfoot .
+
+:secondStainDoc
+    ex:hasQuoteFromSource :q_secondStain_fairSex .
+
+:blueCarbuncleDoc
+    ex:hasQuoteFromSource :q_blueCarbuncle_businessToKnow .
+
+:valleyOfFearDoc
+    ex:hasQuoteFromSource :q_valleyOfFear_mediocrity .
+
+:brucePartingtonPlansDoc
+    ex:hasQuoteFromSource :q_brucePartingtonPlans_contingenciesFail .
+
+:blanchedSoldierDoc
+    ex:hasQuoteFromSource :q_blanchedSoldier_eliminatedAllImpossible .
+
+
+# ============================================================================
 # PERSONS — Full Individual Definitions
 # ============================================================================
+
 
 :221bLandlady a ex:FictionalPerson, ex:Landlady ;
     ex:prefLabel "Landlady of 221B Baker Street" ;
@@ -20108,7 +20369,6 @@ ex:yearsOfService a owl:DatatypeProperty ;
     ex:investigates :brixtonRoadInvestigation ;
     ex:knows :sherlockHolmes ;
     ex:knows :inspectorBaynes ;
-    skos:altLabel "Inspector Gregson" ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :studyInScarletDoc ;
     dc:source :greekInterpreterDoc ;
@@ -20928,6 +21188,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 # ============================================================================
 # LOCATIONS — Full Individual Definitions
 # ============================================================================
+
 
 :104BerkeleySquare a ex:Residence ;
     ex:prefLabel "104 Berkeley Square" ;
@@ -32529,6 +32790,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 # OBJECTS — Full Individual Definitions
 # ============================================================================
 
+
 :abbeyGrangeBellRope a ex:Object ;
     ex:prefLabel "Abbey Grange Bell-Rope" ;
     skos:altLabel "crimson cord" ;
@@ -35622,6 +35884,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 :dailyNews a ex:Newspaper ;
     ex:prefLabel "Daily News" ;
     ex:description "London newspaper where Mycroft placed advertisement seeking Kratides and Sophy. The Daily News is a London newspaper that reported on the case as a political crime." ;
+    a ex:Newspaper ;
     ex:prefLabel "Daily News" ;
     ex:locatedIn :london ;
     ex:memberOfOntology ex:SherlockOntology ;
@@ -38348,6 +38611,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 # ============================================================================
 # EVENTS — Full Individual Definitions
 # ============================================================================
+
 
 :abbasParvaIncident a ex:Murder ;
     ex:prefLabel "Abbas Parva Incident" ;
@@ -43674,6 +43938,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 # ORGANIZATIONS — Full Individual Definitions
 # ============================================================================
 
+
 :3rdBengalFusiliers a ex:MilitaryUnit ;
     ex:prefLabel "3rd Bengal Fusiliers" ;
     ex:description "Military regiment stationed at Agra during the Indian Mutiny. Part of the garrison along with some Sikhs, two troops of horse, and a battery of artillery that defended the city and Agra Fort." ;
@@ -44204,7 +44469,6 @@ ex:yearsOfService a owl:DatatypeProperty ;
     ex:locatedIn :london ;
     ex:hasMember :colonelSebastianMoran ;
     ex:hasMember :parkerGarroter ;
-    skos:altLabel "the Moriarty gang" ;
     ex:memberOfOntology ex:SherlockOntology ;
     dc:source :finalProblemDoc ;
     dc:source :emptyHouseDoc .
@@ -45328,6 +45592,7 @@ ex:yearsOfService a owl:DatatypeProperty ;
 # ============================================================================
 # DEDUCTIONS — Full Individual Definitions
 # ============================================================================
+
 
 :deduction_abbeyGrange_holmes_01 a ex:Deduction ;
     ex:prefLabel "Holmes Deduces Sir Eustace Is Dead and the Case Is Murder" ;
@@ -56150,8 +56415,597 @@ ex:yearsOfService a owl:DatatypeProperty ;
 
 
 # ============================================================================
+# QUOTATIONS — Full Individual Definitions
+# ============================================================================
+
+
+:qf_elementaryMyDearWatson a ex:QuoteFamily ;
+    ex:prefLabel "Elementary, My Dear Watson" ;
+    ex:description "The most famous Sherlock Holmes quote that Holmes never actually says. The combined phrase 'Elementary, my dear Watson' does not appear anywhere in the sixty canonical stories. What does appear, in 'The Crooked Man' (1893), is a passage where Watson exclaims 'Excellent!' and Holmes replies 'Elementary' — but the two words 'Elementary' and 'my dear Watson' are separated by a paragraph and occur in the wrong order. Holmes frequently addresses Watson as 'my dear Watson' throughout the canon, and occasionally describes his deductions as 'elementary', but the iconic combined phrase is an invention of later adaptations." ;
+    ex:canonicalForm "Elementary, my dear Watson." ;
+    ex:mandelaEffectOnly true ;
+    ex:mandelaEffect "The phrase was mistakenly included in Bartlett's Familiar Quotations in both 1937 and 1948 editions as a genuine canonical quote. The closest approach in the canon is in 'The Crooked Man' (1893), where Watson says 'Excellent!' and Holmes replies 'Elementary,' followed by a passage of explanation, after which Holmes later addresses Watson as 'my dear fellow' — not 'my dear Watson'. The phrase 'Elementary, my dear Watson' first appears verbatim in P.G. Wodehouse's Psmith, Journalist (1915), and was cemented in popular consciousness by the 1929 film The Return of Sherlock Holmes, the first Sherlock Holmes sound film." ;
+    ex:culturalAfterlife "Perhaps the single most recognized detective catchphrase in any language. It has appeared in virtually every major Holmes adaptation, from Basil Rathbone's films through the BBC's Sherlock. The phrase has become a cultural shorthand for condescending intellectual superiority and is routinely used in contexts having nothing to do with detective fiction. Its ubiquity is remarkable given that it originates entirely from adaptations rather than from the source material." ;
+    ex:hasQuoteVariant :q_crookedMan_elementary ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :crookedManDoc .
+
+:q_crookedMan_elementary a ex:Quotation ;
+    ex:prefLabel "Holmes Says 'Elementary' to Watson (The Crooked Man)" ;
+    ex:quoteText "Excellent! I cried. Elementary, said he." ;
+    ex:description "The closest the canon comes to the famous phrase. Watson exclaims 'Excellent!' after Holmes deduces that Watson has been busy that day based on the condition of his boots. Holmes replies 'Elementary' and continues to explain his reasoning. The word 'Elementary' and the phrase 'my dear Watson' (which appears elsewhere in the story) are never combined in a single sentence." ;
+    ex:quoteCategory "catchphrase" ;
+    ex:quoteNarrativeContext "Holmes has deduced that Watson has been busy enough to justify taking a hansom cab rather than walking, based on the observation that Watson's boots are used but not dirty. Watson expresses admiration, and Holmes dismisses the deduction as elementary." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_elementaryMyDearWatson ;
+    ex:quoteFromSource :crookedManDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :crookedManDoc .
+
+:qf_youKnowMyMethods a ex:QuoteFamily ;
+    ex:prefLabel "You Know My Methods" ;
+    ex:description "One of Holmes's most frequently repeated phrases in the canon, appearing in nearly identical forms across at least five stories spanning the full arc of the partnership. Holmes uses it variously as an invitation for Watson to attempt his own deductions, as a shorthand for his investigative approach, and as a confident assertion that his methodology is well established and known to his companion." ;
+    ex:canonicalForm "You know my methods, Watson." ;
+    ex:culturalAfterlife "The phrase has become synonymous with confident expertise and methodological transparency. It appears in virtually every major Holmes adaptation and has entered common English as a way of saying 'you understand how I work'. It is the second most famous canonical quotation according to the Stock Scale for Quotation Popularity." ;
+    ex:hasQuoteVariant :q_signOfTheFour_ch6_knowMyMethods ;
+    ex:hasQuoteVariant :q_crookedMan_knowMyMethods ;
+    ex:canonicalQuote :q_crookedMan_knowMyMethods ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc ;
+    dc:source :crookedManDoc .
+
+:q_signOfTheFour_ch6_knowMyMethods a ex:Quotation ;
+    ex:prefLabel "Holmes Tells Watson to Apply His Methods (The Sign of the Four, Ch. 6)" ;
+    ex:quoteText "You know my methods. Apply them, and it will be instructive to compare results." ;
+    ex:description "Holmes invites Watson to analyze the small footprints found at the scene of Bartholomew Sholto's murder at Pondicherry Lodge. This is the expanded form, where Holmes challenges Watson to use the methods himself rather than merely acknowledging them." ;
+    ex:quoteCategory "catchphrase" ;
+    ex:quoteNarrativeContext "At Pondicherry Lodge, after the murder of Bartholomew Sholto, Watson is disturbed by the small, naked footprints on the floor. Holmes, with a touch of impatience, tells Watson to apply his methods rather than simply asking for the answer." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :pondicherryLodge ;
+    ex:quoteAssociatedWithEvent :murderOfBartholomewSholto ;
+    ex:memberOfQuoteFamily :qf_youKnowMyMethods ;
+    ex:quoteFromSource :signOfTheFourDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+:q_crookedMan_knowMyMethods a ex:Quotation ;
+    ex:prefLabel "Holmes Describes Using His Methods (The Crooked Man)" ;
+    ex:quoteText "You know my methods, Watson. There was not one of them which I did not apply to the inquiry." ;
+    ex:description "The version most frequently cited in quotation dictionaries. Holmes describes having applied all of his methods to examine the room and lawn at the scene. The Oxford Dictionary of Quotations included multiple appearances of this phrase across its editions." ;
+    ex:quoteCategory "catchphrase" ;
+    ex:quoteNarrativeContext "Holmes is recounting to Watson his investigation of the scene at Chatham, where Colonel Barclay was found dead and his wife in a state of insensibility." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_youKnowMyMethods ;
+    ex:quoteFromSource :crookedManDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :crookedManDoc .
+
+:qf_eliminatedTheImpossible a ex:QuoteFamily ;
+    ex:prefLabel "The Elimination of the Impossible" ;
+    ex:description "Holmes's most famous philosophical maxim on deductive reasoning, expressed in varying forms across at least five canonical stories spanning 1890 to 1926. Holmes variously calls it 'my precept', 'an old maxim of mine', and 'the old axiom', treating it as a foundational principle of his method." ;
+    ex:canonicalForm "When you have eliminated the impossible, whatever remains, however improbable, must be the truth." ;
+    ex:preCanonicalOrigin "Doyle first used a version of this idea in 'The Fate of the Evangeline' (1885), published in The Boy's Own Paper two years before A Study in Scarlet. In that story, a character attributes the principle to Edgar Allan Poe's detective Auguste Dupin. However, researchers have been unable to find this statement anywhere in Poe's writings. The credit therefore belongs to Doyle himself, though he may have been inspired by Poe's detective tales." ;
+    ex:culturalAfterlife "The maxim has become one of the most widely quoted lines in English literature. Spock paraphrases it in Star Trek VI. House M.D. structures its diagnostic methodology around the same eliminative logic. Dorothy L. Sayers attributed it to both Holmes and Dupin in Strong Poison (1930). The 'Holmesian fallacy' names the logical error of applying the method without having identified all possibilities." ;
+    ex:mandelaEffect "The most common distortion is conflation of the various canonical wordings into a single version that matches none. Many sources render it as 'Once you eliminate the impossible, whatever remains, no matter how improbable, must be the truth' — a phrasing that appears nowhere in Doyle. The word 'eliminate' is almost universally preferred, obscuring that Doyle also used 'excluded' (The Beryl Coronet) and 'all other contingencies fail' (The Bruce-Partington Plans)." ;
+    ex:hasQuoteVariant :q_signOfTheFour_ch1_eliminateFactors ;
+    ex:hasQuoteVariant :q_signOfTheFour_ch6_eliminatedImpossible ;
+    ex:hasQuoteVariant :q_berylCoronet_excludedImpossible ;
+    ex:hasQuoteVariant :q_brucePartingtonPlans_contingenciesFail ;
+    ex:hasQuoteVariant :q_blanchedSoldier_eliminatedAllImpossible ;
+    ex:canonicalQuote :q_signOfTheFour_ch6_eliminatedImpossible ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc ;
+    dc:source :berylCoronetDoc ;
+    dc:source :brucePartingtonPlansDoc ;
+    dc:source :blanchedSoldierDoc .
+
+:q_signOfTheFour_ch1_eliminateFactors a ex:Quotation ;
+    ex:prefLabel "Holmes States the Elimination Principle (The Sign of the Four, Ch. 1)" ;
+    ex:quoteText "Eliminate all other factors, and the one which remains must be the truth." ;
+    ex:description "The earliest and most compressed version of the maxim, spoken during the opening 'Science of Deduction' chapter after Holmes demonstrates his ability to deduce that Watson visited a post office and dispatched a telegram." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes has deduced from Watson's appearance that he recently visited a Wigmore Street post office and sent a telegram." ;
+    ex:quoteNotable false ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_eliminatedTheImpossible ;
+    ex:quoteFromSource :signOfTheFourDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+:q_signOfTheFour_ch6_eliminatedImpossible a ex:Quotation ;
+    ex:prefLabel "Holmes Invokes His Precept on the Impossible (The Sign of the Four, Ch. 6)" ;
+    ex:quoteText "How often have I said to you that when you have eliminated the impossible, whatever remains, however improbable, must be the truth?" ;
+    ex:description "The most famous and widely quoted version. Holmes calls it 'my precept' and frames it as something he has told Watson many times before. This is the wording most quotation dictionaries cite." ;
+    ex:quoteSpeakerLabel "my precept" ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes and Watson are investigating the murder of Bartholomew Sholto at Pondicherry Lodge. The room is locked from the inside. After eliminating the door, window, and chimney, Holmes reveals the answer: a trapdoor in the ceiling." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :pondicherryLodge ;
+    ex:quoteAssociatedWithEvent :murderOfBartholomewSholto ;
+    ex:memberOfQuoteFamily :qf_eliminatedTheImpossible ;
+    ex:quoteFromSource :signOfTheFourDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+:q_berylCoronet_excludedImpossible a ex:Quotation ;
+    ex:prefLabel "Holmes Cites His Old Maxim on the Impossible (The Beryl Coronet)" ;
+    ex:quoteText "It is an old maxim of mine that when you have excluded the impossible, whatever remains, however improbable, must be the truth." ;
+    ex:description "Holmes uses 'excluded' rather than 'eliminated' and calls the principle 'an old maxim of mine'. He applies it to demonstrate that Mary Holder, not Arthur, was responsible for the damage to the beryl coronet." ;
+    ex:quoteSpeakerLabel "an old maxim of mine" ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes is explaining his solution to banker Alexander Holder. He has excluded Holder himself, leaving only Mary, Arthur, or the maids. Arthur's love for Mary explains his silence." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :alexanderHolder ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:quoteAssociatedWithEvent :berylCoronetTheft ;
+    ex:memberOfQuoteFamily :qf_eliminatedTheImpossible ;
+    ex:quoteFromSource :berylCoronetDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :berylCoronetDoc .
+
+:q_brucePartingtonPlans_contingenciesFail a ex:Quotation ;
+    ex:prefLabel "Holmes Falls Back on the Old Axiom (The Bruce-Partington Plans)" ;
+    ex:quoteText "We must fall back upon the old axiom that when all other contingencies fail, whatever remains, however improbable, must be the truth." ;
+    ex:description "The most freely rephrased version. Holmes replaces 'eliminated the impossible' with 'all other contingencies fail' and calls the principle 'the old axiom'." ;
+    ex:quoteSpeakerLabel "the old axiom" ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes is investigating the death of Arthur Cadogan West. Having eliminated the possibility that West entered the train at any station, Holmes concludes the body was placed on the roof of a train car from above the tracks." ;
+    ex:quoteNotable false ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:quoteAssociatedWithEvent :murderOfCadoganWest ;
+    ex:memberOfQuoteFamily :qf_eliminatedTheImpossible ;
+    ex:quoteFromSource :brucePartingtonPlansDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :brucePartingtonPlansDoc .
+
+:q_blanchedSoldier_eliminatedAllImpossible a ex:Quotation ;
+    ex:prefLabel "Holmes Describes His Method as Eliminating the Impossible (The Blanched Soldier)" ;
+    ex:quoteText "The process starts upon the supposition that when you have eliminated all which is impossible, then whatever remains, however improbable, must be the truth." ;
+    ex:description "The final appearance in the canon, spoken by Holmes in a story he narrates himself. The only variant where Holmes frames the idea as a 'supposition' underlying his process." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes is explaining his three-hypothesis approach (crime, insanity, or disease) to the Emsworth family regarding Godfrey's mysterious seclusion." ;
+    ex:quoteNotable false ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :jamesDodd ;
+    ex:quoteLocation :tuxburyOldPark ;
+    ex:memberOfQuoteFamily :qf_eliminatedTheImpossible ;
+    ex:quoteFromSource :blanchedSoldierDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :blanchedSoldierDoc .
+
+:qf_vilestAlleys a ex:QuoteFamily ;
+    ex:prefLabel "The Vilest Alleys of London" ;
+    ex:description "Holmes's observation on rural crime, arguing that isolated country houses harbour worse crimes than London's worst slums because the absence of neighbours and public scrutiny allows cruelty to go undetected." ;
+    ex:canonicalForm "It is my belief, Watson, founded upon my experience, that the lowest and vilest alleys in London do not present a more dreadful record of sin than does the smiling and beautiful countryside." ;
+    ex:culturalAfterlife "Frequently quoted in discussions of rural crime and domestic violence. The passage anticipated by decades the sociological recognition that isolation enables abuse." ;
+    ex:hasQuoteVariant :q_copperBeeches_vilestAlleys ;
+    ex:canonicalQuote :q_copperBeeches_vilestAlleys ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :copperBeechesDoc .
+
+:q_copperBeeches_vilestAlleys a ex:Quotation ;
+    ex:prefLabel "Holmes on Rural Crime (The Copper Beeches)" ;
+    ex:quoteText "It is my belief, Watson, founded upon my experience, that the lowest and vilest alleys in London do not present a more dreadful record of sin than does the smiling and beautiful countryside." ;
+    ex:description "Holmes delivers this observation while he and Watson travel by train to Hampshire to investigate the case of Violet Hunter. Watson has admired the scattered farmhouses, prompting Holmes's dark counterpoint." ;
+    ex:quoteCategory "observation on human nature" ;
+    ex:quoteNarrativeContext "Holmes and Watson are travelling by train to Winchester. Watson admires the beauty of the scattered houses, and Holmes responds with this bleak assessment of rural crime." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:memberOfQuoteFamily :qf_vilestAlleys ;
+    ex:quoteFromSource :copperBeechesDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :copperBeechesDoc .
+
+:qf_greatCesspool a ex:QuoteFamily ;
+    ex:prefLabel "London, That Great Cesspool" ;
+    ex:description "Watson's vivid description of London as a place that draws in the rootless and the idle, from the very first chapter of the very first Holmes story." ;
+    ex:canonicalForm "London, that great cesspool into which all the loungers and idlers of the Empire are irresistibly drained." ;
+    ex:culturalAfterlife "One of the most frequently quoted descriptions of Victorian London in English literature. The 'great cesspool' image has been adopted by urban historians and literary critics as a touchstone for Victorian attitudes toward the metropolis." ;
+    ex:hasQuoteVariant :q_studyInScarlet_cesspool ;
+    ex:canonicalQuote :q_studyInScarlet_cesspool ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :studyInScarletDoc .
+
+:q_studyInScarlet_cesspool a ex:Quotation ;
+    ex:prefLabel "Watson Describes London as a Great Cesspool (A Study in Scarlet)" ;
+    ex:quoteText "I naturally gravitated to London, that great cesspool into which all the loungers and idlers of the Empire are irresistibly drained." ;
+    ex:description "Watson recounts his biography in the opening chapter of A Study in Scarlet. Having returned wounded from Afghanistan with no family in England, he drifted to London. This appears in the very first chapter of the very first Holmes story." ;
+    ex:quoteCategory "narrative passage" ;
+    ex:quoteNarrativeContext "The opening chapter of A Study in Scarlet. Watson, discharged from army service after being wounded at Maiwand, describes his journey to London and his rootless existence before meeting Holmes." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :johnWatson ;
+    ex:quoteLocation :london ;
+    ex:memberOfQuoteFamily :qf_greatCesspool ;
+    ex:quoteFromSource :studyInScarletDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :studyInScarletDoc .
+
+:qf_theWoman a ex:QuoteFamily ;
+    ex:prefLabel "She Is Always The Woman" ;
+    ex:description "The famous opening line of 'A Scandal in Bohemia', establishing Irene Adler's unique status in Holmes's regard — not as a romantic interest but as the one person who outmanoeuvred him." ;
+    ex:canonicalForm "To Sherlock Holmes she is always 'the woman'." ;
+    ex:mandelaEffect "The passage is frequently cited as evidence that Holmes had romantic feelings for Irene Adler. The text says precisely the opposite: 'It was not that he felt any emotion akin to love for Irene Adler. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.' Adler's significance to Holmes is intellectual, not romantic." ;
+    ex:culturalAfterlife "One of the most iconic opening lines in detective fiction. Irene Adler's designation as 'the woman' has made her the most famous female character in the Holmes canon despite appearing in only one story." ;
+    ex:hasQuoteVariant :q_scandalInBohemia_theWoman ;
+    ex:canonicalQuote :q_scandalInBohemia_theWoman ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+
+:q_scandalInBohemia_theWoman a ex:Quotation ;
+    ex:prefLabel "Watson on Irene Adler as 'The Woman' (A Scandal in Bohemia)" ;
+    ex:quoteText "To Sherlock Holmes she is always 'the woman'. I have seldom heard him mention her under any other name. In his eyes she eclipses and predominates the whole of her sex." ;
+    ex:description "The opening lines of 'A Scandal in Bohemia'. Watson establishes the singular regard in which Holmes holds Irene Adler — a regard explicitly described as intellectual rather than emotional." ;
+    ex:quoteCategory "narrative passage" ;
+    ex:quoteNarrativeContext "Watson opens 'A Scandal in Bohemia' by reflecting on Irene Adler's unique status in Holmes's estimation, before the story of the case itself begins." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_theWoman ;
+    ex:quoteFromSource :scandalInBohemiaDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+
+:qf_bakerStreetIrregulars a ex:QuoteFamily ;
+    ex:prefLabel "The Baker Street Irregulars" ;
+    ex:description "Holmes's introduction of his network of street urchins, coining the name that would become one of the most enduring elements of the Holmes mythology." ;
+    ex:canonicalForm "It is the unofficial force — the Baker Street irregulars." ;
+    ex:culturalAfterlife "The name was adopted in 1934 by Christopher Morley for the Baker Street Irregulars, the premier Sherlockian literary society. The concept of a detective's network of street informants became a genre convention." ;
+    ex:hasQuoteVariant :q_signOfTheFour_irregulars ;
+    ex:canonicalQuote :q_signOfTheFour_irregulars ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+:q_signOfTheFour_irregulars a ex:Quotation ;
+    ex:prefLabel "Holmes Introduces the Baker Street Irregulars (The Sign of the Four)" ;
+    ex:quoteText "No, it's not quite so bad as that. It is the unofficial force — the Baker Street irregulars." ;
+    ex:description "Watson, alarmed by a commotion at the door, assumes they are under attack. Holmes reassures him it is merely his network of street Arab informants." ;
+    ex:quoteCategory "witticism" ;
+    ex:quoteNarrativeContext "During the Sholto investigation, Holmes has summoned his street boys to help track the steam launch Aurora. A dozen ragged boys then rush up the stairs." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_bakerStreetIrregulars ;
+    ex:quoteFromSource :signOfTheFourDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+:qf_fairSexYourDepartment a ex:QuoteFamily ;
+    ex:prefLabel "The Fair Sex Is Your Department" ;
+    ex:description "Holmes's wry acknowledgment of Watson's greater understanding of women, encapsulating Holmes's deliberate distance from emotional entanglements." ;
+    ex:canonicalForm "The fair sex is your department." ;
+    ex:hasQuoteVariant :q_secondStain_fairSex ;
+    ex:canonicalQuote :q_secondStain_fairSex ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :secondStainDoc .
+
+:q_secondStain_fairSex a ex:Quotation ;
+    ex:prefLabel "Holmes Defers to Watson on Women (The Second Stain)" ;
+    ex:quoteText "Now, Watson, the fair sex is your department." ;
+    ex:description "Lady Hilda Trelawney Hope has just departed 221B. Holmes, with a smile, delegates the analysis of her motives to Watson." ;
+    ex:quoteCategory "witticism" ;
+    ex:quoteNarrativeContext "Lady Hilda has visited Holmes in connection with the stolen state document. After she leaves, Holmes asks Watson to interpret her behaviour." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_fairSexYourDepartment ;
+    ex:quoteFromSource :secondStainDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :secondStainDoc .
+
+:qf_dogInTheNightTime a ex:QuoteFamily ;
+    ex:prefLabel "The Curious Incident of the Dog in the Night-Time" ;
+    ex:description "One of the finest examples of Holmesian reasoning. Holmes draws attention to the fact that the stable dog did not bark — meaning the intruder was someone the dog knew. The brilliance lies in treating the absence of an event as itself a clue." ;
+    ex:canonicalForm "The dog did nothing in the night-time. That was the curious incident." ;
+    ex:culturalAfterlife "The passage has transcended detective fiction to become a general principle of reasoning: the absence of evidence can itself be evidence. Mark Haddon used it as the title of his 2003 novel. The exchange is routinely cited in logic, philosophy, and investigative methodology." ;
+    ex:hasQuoteVariant :q_silverBlaze_dogNightTime ;
+    ex:canonicalQuote :q_silverBlaze_dogNightTime ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :silverBlazeDoc .
+
+:q_silverBlaze_dogNightTime a ex:Quotation ;
+    ex:prefLabel "Holmes on the Dog That Did Nothing (Silver Blaze)" ;
+    ex:quoteText "Is there any other point to which you would wish to draw my attention? To the curious incident of the dog in the night-time. The dog did nothing in the night-time. That was the curious incident, remarked Sherlock Holmes." ;
+    ex:description "The famous exchange between Inspector Gregory and Holmes. Gregory asks if Holmes wishes to draw attention to anything else. Holmes mentions the dog's silence, proving the intruder was known to it." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes and Inspector Gregory are at King's Pyland, investigating the disappearance of the racehorse Silver Blaze and the death of its trainer John Straker." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :inspectorGregory ;
+    ex:memberOfQuoteFamily :qf_dogInTheNightTime ;
+    ex:quoteFromSource :silverBlazeDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :silverBlazeDoc .
+
+:qf_giganticHound a ex:QuoteFamily ;
+    ex:prefLabel "The Footprints of a Gigantic Hound" ;
+    ex:description "The dramatic climax of Dr. Mortimer's narrative, delivering the central mystery of The Hound of the Baskervilles in a single sentence." ;
+    ex:canonicalForm "Mr. Holmes, they were the footprints of a gigantic hound!" ;
+    ex:culturalAfterlife "The line has become iconic in horror and detective fiction, encapsulating the Gothic atmosphere of Doyle's most famous Holmes novel." ;
+    ex:hasQuoteVariant :q_hound_giganticHound ;
+    ex:canonicalQuote :q_hound_giganticHound ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :houndOfTheBaskervillesDoc .
+
+:q_hound_giganticHound a ex:Quotation ;
+    ex:prefLabel "Dr. Mortimer Reveals the Hound's Footprints (The Hound of the Baskervilles)" ;
+    ex:quoteText "Mr. Holmes, they were the footprints of a gigantic hound!" ;
+    ex:description "Dr. James Mortimer, recounting the circumstances of Sir Charles Baskerville's death, delivers this as the dramatic climax of his narrative. His voice sinks to a whisper." ;
+    ex:quoteCategory "dramatic declaration" ;
+    ex:quoteNarrativeContext "Dr. Mortimer is telling Holmes and Watson about the death of Sir Charles at Baskerville Hall. He reveals what he found near the body in the soft ground." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :jamesMortimer ;
+    ex:addressedTo :sherlockHolmes ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:quoteAssociatedWithEvent :deathOfCharlesBaskerville ;
+    ex:memberOfQuoteFamily :qf_giganticHound ;
+    ex:quoteFromSource :houndOfTheBaskervillesDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :houndOfTheBaskervillesDoc .
+
+:qf_capitalMistake a ex:QuoteFamily ;
+    ex:prefLabel "A Capital Mistake to Theorize Before One Has Data" ;
+    ex:description "Holmes's foundational principle of empirical reasoning. The core idea — that premature theorizing corrupts judgment — is one of his most quoted methodological principles." ;
+    ex:canonicalForm "It is a capital mistake to theorize before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts." ;
+    ex:culturalAfterlife "Widely quoted in scientific, business, and investigative contexts as a warning against confirmation bias. The passage anticipates by decades the formal recognition of confirmation bias in cognitive psychology." ;
+    ex:hasQuoteVariant :q_studyInScarlet_capitalMistake ;
+    ex:hasQuoteVariant :q_scandalInBohemia_capitalMistake ;
+    ex:canonicalQuote :q_scandalInBohemia_capitalMistake ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :studyInScarletDoc ;
+    dc:source :scandalInBohemiaDoc .
+
+:q_studyInScarlet_capitalMistake a ex:Quotation ;
+    ex:prefLabel "Holmes Warns Against Premature Theorizing (A Study in Scarlet)" ;
+    ex:quoteText "It is a capital mistake to theorize before you have all the evidence. It biases the judgment." ;
+    ex:description "The earliest version, from A Study in Scarlet. Holmes and Watson are in a cab on their way to Lauriston Gardens." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes and Watson are in a cab heading to Lauriston Gardens. Watson observes that Holmes seems distracted, and Holmes explains he is waiting for evidence." ;
+    ex:quoteNotable false ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:memberOfQuoteFamily :qf_capitalMistake ;
+    ex:quoteFromSource :studyInScarletDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :studyInScarletDoc .
+
+:q_scandalInBohemia_capitalMistake a ex:Quotation ;
+    ex:prefLabel "Holmes on Twisting Facts to Suit Theories (A Scandal in Bohemia)" ;
+    ex:quoteText "It is a capital mistake to theorize before one has data. Insensibly one begins to twist facts to suit theories, instead of theories to suit facts." ;
+    ex:description "The fuller and more famous version. Holmes expands the warning with the memorable explanation of how premature theorizing corrupts judgment. This is the version most quotation dictionaries cite." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Holmes is speaking to Watson at 221B Baker Street, early in the case involving the King of Bohemia and Irene Adler." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_capitalMistake ;
+    ex:quoteFromSource :scandalInBohemiaDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+
+:qf_gameIsAfoot a ex:QuoteFamily ;
+    ex:prefLabel "The Game Is Afoot" ;
+    ex:description "Holmes's exhilarating call to action, rousing Watson from sleep. Despite its enormous cultural presence, Holmes says this only once in the entire canon. The phrase is borrowed from Shakespeare's Henry V." ;
+    ex:canonicalForm "Come, Watson, come! The game is afoot." ;
+    ex:preCanonicalOrigin "The phrase originates with Shakespeare. In Henry IV Part 1 (1597), Northumberland says 'Before the game is afoot, thou still let'st slip.' In Henry V (c. 1599), King Henry's speech includes 'the game's afoot: Follow your spirit, and upon this charge cry God for Harry, England, and Saint George!'" ;
+    ex:culturalAfterlife "One of the most widely recognized Holmes catchphrases despite appearing only once in the canon. It has been used in virtually every major adaptation and has become a general English idiom for 'the chase has begun'." ;
+    ex:mandelaEffect "Many readers believe Holmes says 'The game is afoot' repeatedly throughout the canon. In fact, it appears in only one story: 'The Adventure of the Abbey Grange' (1904). Its ubiquity in adaptations has created the false impression that it is a signature recurring phrase." ;
+    ex:hasQuoteVariant :q_abbeyGrange_gameAfoot ;
+    ex:canonicalQuote :q_abbeyGrange_gameAfoot ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :abbeyGrangeDoc .
+
+:q_abbeyGrange_gameAfoot a ex:Quotation ;
+    ex:prefLabel "Holmes Rouses Watson — The Game Is Afoot (The Abbey Grange)" ;
+    ex:quoteText "Come, Watson, come! The game is afoot. Not a word! Into your clothes and come!" ;
+    ex:description "Holmes bursts into Watson's bedroom in the early hours, having received an urgent telegram from Inspector Hopkins about a tragedy at Abbey Grange. The line opens the story." ;
+    ex:quoteCategory "catchphrase" ;
+    ex:quoteNarrativeContext "The very opening of 'The Adventure of the Abbey Grange'. Holmes has received an urgent summons from Inspector Hopkins. He wakes Watson with this imperative call to action." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_gameIsAfoot ;
+    ex:quoteFromSource :abbeyGrangeDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :abbeyGrangeDoc .
+
+:qf_deceptiveObviousFact a ex:QuoteFamily ;
+    ex:prefLabel "Nothing More Deceptive Than an Obvious Fact" ;
+    ex:description "Holmes's warning against taking surface appearances at face value." ;
+    ex:canonicalForm "There is nothing more deceptive than an obvious fact." ;
+    ex:hasQuoteVariant :q_boscombeValley_obviousFact ;
+    ex:canonicalQuote :q_boscombeValley_obviousFact ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :boscombeValleyMysteryDoc .
+
+:q_boscombeValley_obviousFact a ex:Quotation ;
+    ex:prefLabel "Holmes on Deceptive Obvious Facts (The Boscombe Valley Mystery)" ;
+    ex:quoteText "There is nothing more deceptive than an obvious fact." ;
+    ex:description "Holmes makes this observation while investigating the murder of Charles McCarthy at Boscombe Pool. The circumstantial evidence seems to point overwhelmingly to the victim's son James, but Holmes suspects the obvious interpretation is wrong." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:memberOfQuoteFamily :qf_deceptiveObviousFact ;
+    ex:quoteFromSource :boscombeValleyMysteryDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :boscombeValleyMysteryDoc .
+
+:qf_crimeCommonLogicRare a ex:QuoteFamily ;
+    ex:prefLabel "Crime Is Common, Logic Is Rare" ;
+    ex:description "Holmes's concise statement of why his particular skills are valuable: crimes happen constantly, but the ability to reason through them analytically is the scarce resource." ;
+    ex:canonicalForm "Crime is common. Logic is rare. Therefore it is upon the logic rather than upon the crime that you should dwell." ;
+    ex:hasQuoteVariant :q_copperBeeches_crimeLogic ;
+    ex:canonicalQuote :q_copperBeeches_crimeLogic ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :copperBeechesDoc .
+
+:q_copperBeeches_crimeLogic a ex:Quotation ;
+    ex:prefLabel "Holmes on Crime and Logic (The Copper Beeches)" ;
+    ex:quoteText "Crime is common. Logic is rare. Therefore it is upon the logic rather than upon the crime that you should dwell." ;
+    ex:description "Holmes is responding to Watson's accounts of their cases, which Holmes feels emphasize sensational details over the analytical reasoning." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_crimeCommonLogicRare ;
+    ex:quoteFromSource :copperBeechesDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :copperBeechesDoc .
+
+:qf_littleThings a ex:QuoteFamily ;
+    ex:prefLabel "The Little Things Are Infinitely the Most Important" ;
+    ex:description "Holmes's assertion that apparently trivial details are where the real significance lies." ;
+    ex:canonicalForm "It has long been an axiom of mine that the little things are infinitely the most important." ;
+    ex:hasQuoteVariant :q_caseOfIdentity_littleThings ;
+    ex:canonicalQuote :q_caseOfIdentity_littleThings ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :caseOfIdentityDoc .
+
+:q_caseOfIdentity_littleThings a ex:Quotation ;
+    ex:prefLabel "Holmes on the Importance of Trifles (A Case of Identity)" ;
+    ex:quoteText "It has long been an axiom of mine that the little things are infinitely the most important." ;
+    ex:description "Holmes articulates one of his core investigative principles about the importance of apparently insignificant details." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_littleThings ;
+    ex:quoteFromSource :caseOfIdentityDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :caseOfIdentityDoc .
+
+:qf_napoleonOfCrime a ex:QuoteFamily ;
+    ex:prefLabel "The Napoleon of Crime" ;
+    ex:description "Holmes's characterization of Professor Moriarty, establishing him as the supreme criminal mastermind. One of the most recognizable villain descriptions in English literature." ;
+    ex:canonicalForm "He is the Napoleon of crime, Watson." ;
+    ex:culturalAfterlife "The phrase has become the standard template for describing criminal masterminds in fiction. Moriarty himself, largely on the strength of this characterization, has become one of the most famous literary villains despite appearing in only two canonical stories." ;
+    ex:hasQuoteVariant :q_finalProblem_napoleonCrime ;
+    ex:canonicalQuote :q_finalProblem_napoleonCrime ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :finalProblemDoc .
+
+:q_finalProblem_napoleonCrime a ex:Quotation ;
+    ex:prefLabel "Holmes Describes Moriarty as the Napoleon of Crime (The Final Problem)" ;
+    ex:quoteText "He is the Napoleon of crime, Watson. He is the organizer of half that is evil and of nearly all that is undetected in this great city." ;
+    ex:description "Holmes is describing Professor Moriarty to Watson for the first time, having been working to bring down Moriarty's organization." ;
+    ex:quoteCategory "dramatic declaration" ;
+    ex:quoteNarrativeContext "Holmes arrives unexpectedly at Watson's consulting room, visibly shaken. He explains his campaign against Moriarty. This is Watson's — and the reader's — introduction to Moriarty." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteAssociatedWithEvent :confrontationAtReichenbach ;
+    ex:memberOfQuoteFamily :qf_napoleonOfCrime ;
+    ex:quoteFromSource :finalProblemDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :finalProblemDoc .
+
+:qf_myBusinessToKnow a ex:QuoteFamily ;
+    ex:prefLabel "It Is My Business to Know" ;
+    ex:description "One of Holmes's most confident self-introductions, delivered with characteristic aplomb to a stranger." ;
+    ex:canonicalForm "My name is Sherlock Holmes. It is my business to know what other people do not know." ;
+    ex:hasQuoteVariant :q_blueCarbuncle_businessToKnow ;
+    ex:canonicalQuote :q_blueCarbuncle_businessToKnow ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :blueCarbuncleDoc .
+
+:q_blueCarbuncle_businessToKnow a ex:Quotation ;
+    ex:prefLabel "Holmes Introduces Himself to Ryder (The Blue Carbuncle)" ;
+    ex:quoteText "My name is Sherlock Holmes. It is my business to know what other people do not know." ;
+    ex:description "Holmes reveals his identity to James Ryder, the frightened hotel attendant who stole the Countess of Morcar's blue carbuncle and hid it inside a goose." ;
+    ex:quoteCategory "self-description" ;
+    ex:quoteNarrativeContext "Holmes has tracked the stolen blue carbuncle through a chain of evidence back to James Ryder and lured him to 221B." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :jamesRyder ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_myBusinessToKnow ;
+    ex:quoteFromSource :blueCarbuncleDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :blueCarbuncleDoc .
+
+:qf_mediocrityTalentGenius a ex:QuoteFamily ;
+    ex:prefLabel "Mediocrity Knows Nothing Higher Than Itself" ;
+    ex:description "Watson's aphoristic observation on the nature of talent and recognition, offered as narrative aside rather than dialogue." ;
+    ex:canonicalForm "Mediocrity knows nothing higher than itself; but talent instantly recognizes genius." ;
+    ex:hasQuoteVariant :q_valleyOfFear_mediocrity ;
+    ex:canonicalQuote :q_valleyOfFear_mediocrity ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :valleyOfFearDoc .
+
+:q_valleyOfFear_mediocrity a ex:Quotation ;
+    ex:prefLabel "Watson on Mediocrity and Genius (The Valley of Fear)" ;
+    ex:quoteText "Mediocrity knows nothing higher than itself; but talent instantly recognizes genius." ;
+    ex:description "Watson's narrative observation in the opening chapter of The Valley of Fear, reflecting on the relationship between ordinary minds and extraordinary ones." ;
+    ex:quoteCategory "aphorism" ;
+    ex:quoteNotable true ;
+    ex:spokenBy :johnWatson ;
+    ex:memberOfQuoteFamily :qf_mediocrityTalentGenius ;
+    ex:quoteFromSource :valleyOfFearDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :valleyOfFearDoc .
+
+:qf_seeButNotObserve a ex:QuoteFamily ;
+    ex:prefLabel "You See, But You Do Not Observe" ;
+    ex:description "Holmes's famous distinction between passive seeing and active observation, which encapsulates the core difference between his method and ordinary perception." ;
+    ex:canonicalForm "You see, but you do not observe. The distinction is clear." ;
+    ex:culturalAfterlife "One of the most widely quoted lines from the canon, used in educational contexts, mindfulness discussions, and scientific methodology." ;
+    ex:hasQuoteVariant :q_scandalInBohemia_seeNotObserve ;
+    ex:canonicalQuote :q_scandalInBohemia_seeNotObserve ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+
+:q_scandalInBohemia_seeNotObserve a ex:Quotation ;
+    ex:prefLabel "Holmes Distinguishes Seeing from Observing (A Scandal in Bohemia)" ;
+    ex:quoteText "You see, but you do not observe. The distinction is clear." ;
+    ex:description "Holmes demonstrates the difference by asking Watson how many steps lead to their rooms. Watson, who has climbed them hundreds of times, cannot say. Holmes knows there are seventeen." ;
+    ex:quoteCategory "deductive principle" ;
+    ex:quoteNarrativeContext "Early in 'A Scandal in Bohemia'. Holmes challenges Watson on the number of stairs at 221B, proving that repetition of an experience does not equal observation." ;
+    ex:quoteNotable true ;
+    ex:spokenBy :sherlockHolmes ;
+    ex:addressedTo :johnWatson ;
+    ex:quoteLocation :221bBakerStreet ;
+    ex:memberOfQuoteFamily :qf_seeButNotObserve ;
+    ex:quoteFromSource :scandalInBohemiaDoc ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+
+:qf_quickWatsonTheNeedle a ex:QuoteFamily ;
+    ex:prefLabel "Quick, Watson, the Needle" ;
+    ex:description "A famous line widely attributed to Sherlock Holmes that does not appear anywhere in the sixty canonical stories. The phrase originated in the comedic operetta The Red Mill (1906) by Victor Herbert and Henry Blossom, where a con man impersonating Holmes delivers it as a joke. It was later used in the 1939 Basil Rathbone film The Hound of the Baskervilles." ;
+    ex:canonicalForm "Quick, Watson, the needle!" ;
+    ex:mandelaEffectOnly true ;
+    ex:mandelaEffect "The phrase is routinely attributed to the canonical Holmes despite originating in a 1906 operetta where a character merely impersonates Holmes. The Basil Rathbone films cemented the association. Many readers who know Holmes uses cocaine assume this line must appear somewhere in the stories, but it does not." ;
+    ex:culturalAfterlife "The phrase became a cultural shorthand for Holmes's drug use, oversimplifying what Doyle presented as a serious character flaw. It has appeared in countless parodies and references." ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :signOfTheFourDoc .
+
+
+# ============================================================================
 # REVIEWS — Literary Critical Reviews per Source Document
 # ============================================================================
+
 
 :abbeyGrangeDoc
     ex:reviewersNotes """
@@ -56839,4 +57693,3 @@ The story's emotional architecture is, in places, remarkably fine. Grant Munro's
 One must, however, note the comical frailties that attend the construction. The mask itself is a preposterous contrivance: we are told that little Lucy wears a rigid, livid, flesh-coloured mask to disguise the fact that she is Black, yet this mask terrifies every person who glimpses it — the husband, the neighbours, presumably the milkman — which rather defeats the purpose of concealment. Effie would have attracted considerably less attention to the cottage by simply drawing the curtains. The Scottish nurse, too, is a wonderfully absurd creation: tasked with keeping the child hidden, she responds to a neighbourly visit by slamming the door in Grant Munro's face with a rudeness so conspicuous it practically hangs a placard reading "SECRET CONCEALED WITHIN." Holmes's confident misreading of the case — leprosy, blackmail, a fugitive first husband — is presented as a rare failure, but one suspects that his real error is simply the reflexive Victorian assumption that any secret involving an American marriage, a hidden child, and a hundred-pound payment must involve criminality rather than race. The story knows this, even if Holmes does not.
 What elevates "The Yellow Face" above the common run of the series is precisely its willingness to let the detective fail and to locate the story's true resolution not in intellectual triumph but in moral action. The mystery, once solved, proves to contain no crime at all — only fear, love, and the particular cruelty of a society that would compel a mother to mask her own child's face. Doyle, who was capable of breathtaking carelessness in matters of plot, here achieves something that transcends the detective genre entirely: a story whose real subject is not the puzzle but the human capacity for decency under pressure. That Grant Munro passes this test — without hesitation, without speechifying, with an action rather than an argument — gives the tale a quiet power that the more ingenious mysteries, for all their clockwork satisfactions, never approach. It is one of the few Holmes stories that improves upon reflection, and one of the very few in which the detective's failure is the best thing that could have happened.
 """ .
-

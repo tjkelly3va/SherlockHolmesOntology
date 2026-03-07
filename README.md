@@ -2,13 +2,13 @@
 
 ![Sherlock Holmes](SherlockImage.png)
 
-An RDF/OWL ontology extracted from Arthur Conan Doyle's complete Sherlock Holmes canon — four novels and fifty-six short stories — capturing the characters, locations, objects, organizations, events, deductions, and relationships that constitute the narrative world of the world's most famous detective.
+An RDF/OWL ontology extracted from Arthur Conan Doyle's complete Sherlock Holmes canon — four novels and fifty-six short stories — capturing the characters, locations, objects, organizations, events, deductions, quotations, and relationships that constitute the narrative world of the world's most famous detective.
 
 ## Why This Exists
 
 In the Sherlock Holmes canon, which characters appear in more than one story? Who are Moriarty's known associates? What are Holmes's deductions in "The Adventure of the Speckled Band"? You could ask an AI chatbot like ChatGPT or Claude, and it might give you the right answers — but it might also make things up. These tools are known to "hallucinate": inventing characters who don't exist, attributing deductions to the wrong story, or confidently describing relationships that Doyle never wrote. They sound authoritative, but they have no reliable way to check their answers against the original texts.
 
-This project takes a different approach. Instead of relying on an AI's memory, it organizes everything from the Holmes stories — every character, location, object, event, organization, and deduction — into a structured knowledge base called an ontology. Think of it as a carefully indexed reference work where every fact is linked back to the specific story it came from. It doesn't guess, and it doesn't fill in gaps. If Holmes made a deduction in "The Speckled Band," it's recorded here with a direct link to that story. If a character appears in three stories, the ontology says exactly three — no more, no less. 
+This project takes a different approach. Instead of relying on an AI's memory, it organizes everything from the Holmes stories — every character, location, object, event, organization, deduction, and notable quotation — into a structured knowledge base called an ontology. Think of it as a carefully indexed reference work where every fact is linked back to the specific story it came from. It doesn't guess, and it doesn't fill in gaps. If Holmes made a deduction in "The Speckled Band," it's recorded here with a direct link to that story. If a character appears in three stories, the ontology says exactly three — no more, no less. 
 
 The real power comes from combining these two technologies. An AI chatbot gives you the ability to ask questions in plain English; the ontology gives it a foundation of verified facts to draw on. Together, they can answer complex questions about the Holmes canon conversationally, point you to the specific stories that support each answer, and — just as importantly — hold back when the evidence isn't there rather than making something up.
 
@@ -43,25 +43,27 @@ Complete story listing with publication years and source links is encoded in the
 
 | Metric | Count |
 |--------|-------|
-| OWL classes | 484 |
-| Object properties | 348 |
-| Data properties | 96 |
-| Named individuals (non-deduction) | ~3,490 |
+| OWL classes | 486 |
+| Object properties | 359 |
+| Data properties | 106 |
+| Named individuals (non-deduction, non-quotation) | ~3,490 |
 | Persons (fictional + real) | ~1,000 |
 | Locations | ~930 |
 | Objects | ~650 |
 | Events | ~450 |
 | Organizations | ~150 |
 | Deduction instances | 785 |
+| Quote families | 20 |
+| Quotation instances | 25 |
 | Literary reviews | 60 (one per source document) |
 | Source documents | 60 |
-| File size | ~3.8 MB, ~56,800 lines |
+| File size | ~3.8 MB, ~57,500 lines |
 
 The ontology is serialized in Turtle (.ttl) format and uses W3C standards: OWL 2 for class and property definitions, Dublin Core for provenance metadata, SKOS for alternate labels, and Schema.org for bibliographic typing.
 
-## Seven Orthogonal Pillars
+## Eight Orthogonal Pillars
 
-The ontology is organized around seven independently queryable dimensions. The first five represent the narrative world — every individual descends from exactly one top-level class with no shared parent, ensuring clean categorization. The sixth and seventh pillars (deductions and reviews) layer analytical and critical perspectives on top of the narrative content.
+The ontology is organized around eight independently queryable dimensions. The first five represent the narrative world — every individual descends from exactly one top-level class with no shared parent, ensuring clean categorization. The sixth, seventh, and eighth pillars (deductions, quotations, and reviews) layer analytical, cultural, and critical perspectives on top of the narrative content.
 
 | Pillar | Scope | Examples |
 |--------|-------|----------|
@@ -71,9 +73,12 @@ The ontology is organized around seven independently queryable dimensions. The f
 | **Events** | Occurrences with participants and locations | murders, investigations, journeys, trials |
 | **Organizations** | Groups, firms, institutions, criminal enterprises | Scotland Yard, the Scowrers, the Baker Street Irregulars |
 | **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 785 structured deduction instances with observation, reasoning chain, and conclusion |
+| **Quotations** | Culturally significant lines of dialogue and narration | 20 quote families with 25 verified instances, variant tracking, and Mandela-effect documentation |
 | **Reviews** | Literary critical analysis of each source document | themes, narrative structure, Doyle's craft — one per work |
 
 The deductions pillar captures each act of reasoning as a first-class entity: who made the deduction, what was observed, the logical chain connecting observation to conclusion, and the narrative outcome. This enables queries like "find all deductions where Holmes reasons from physical evidence" or "compare deductive methods across the canon."
+
+The quotations pillar captures the famous lines that have survived the stories and entered popular culture. Each quotation is modeled as a first-class entity linked to its speaker, addressee(s), location, associated event or deduction, and source story. Related quotations — variant wordings of the same idea across multiple stories — are grouped into quote families, with the most culturally prominent version designated as the canonical form. The pillar also documents Mandela effects: quotes widely attributed to Holmes that do not actually appear in the canon (such as "Elementary, my dear Watson"), with detailed notes on their true origins and the gap between popular belief and textual reality. Pre-canonical origins (such as the Shakespeare source of "The game is afoot") and cultural afterlife (adoption in film, television, philosophy, and everyday speech) are recorded as narrative annotations on each quote family.
 
 The reviews pillar provides a scholarly layer alongside the factual extraction, analyzing each of the sixty works for themes, narrative structure, character development, and Doyle's evolving craft across four decades of writing.
 
@@ -102,18 +107,20 @@ The merged ontology file is organized in clearly delimited sections:
 2. **Ontology declaration** — title, creator, date, and cumulative source reference list
 3. **Core subproperty definitions** — `ex:prefLabel`, `ex:description`, and `ex:memberOfOntology`, defined as subproperties of SKOS and Dublin Core terms
 4. **Source provenance** — bibliographic records for all sixty works, with plot summaries and source URLs
-5. **Class definitions** — 484 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
-6. **Object property definitions** — 348 properties with domain, range, and inverse declarations
-7. **Data property definitions** — 96 properties with domain and range
+5. **Class definitions** — 486 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
+6. **Object property definitions** — 359 properties with domain, range, and inverse declarations
+7. **Data property definitions** — 106 properties with domain and range
 8. **Recurring characters** — full definitions for characters appearing across many stories (Holmes, Watson, Lestrade, Mrs. Hudson, Mary Morstan, Moriarty, Wiggins, the Baker Street Irregulars)
 9. **Deductions index** — forward links from each source document to its extracted deduction instances
-10. **Persons** — full definitions for all non-recurring characters
-11. **Locations** — full definitions for all places
-12. **Objects** — full definitions for documents, weapons, animals, vehicles, and other physical entities
-13. **Events** — full definitions for crimes, investigations, journeys, and other occurrences
-14. **Organizations** — full definitions for institutions, firms, criminal enterprises, and groups
-15. **Deductions** — 785 individual deduction instances capturing Holmes's (and others') reasoning
-16. **Reviews** — literary critical analysis for each of the sixty source documents
+10. **Quotations index** — forward links from each source document to its extracted quotation instances
+11. **Persons** — full definitions for all non-recurring characters
+12. **Locations** — full definitions for all places
+13. **Objects** — full definitions for documents, weapons, animals, vehicles, and other physical entities
+14. **Events** — full definitions for crimes, investigations, journeys, and other occurrences
+15. **Organizations** — full definitions for institutions, firms, criminal enterprises, and groups
+16. **Deductions** — 785 individual deduction instances capturing Holmes's (and others') reasoning
+17. **Quotations** — 20 quote families and 25 quotation instances capturing culturally significant lines
+18. **Reviews** — literary critical analysis for each of the sixty source documents
 
 ## How the Ontology Was Built
 
@@ -137,12 +144,12 @@ Each work followed a consistent pipeline governed by a consolidated extraction p
 
 ### Split-File Architecture
 
-As the ontology grew beyond what could be efficiently processed in a single file, a split-file architecture was adopted. The ontology is maintained as eight working files:
+As the ontology grew beyond what could be efficiently processed in a single file, a split-file architecture was adopted. The ontology is maintained as nine working files:
 
-- **Baseline index** (`sherlock_baseline.ttl`) — schema definitions, recurring characters, entity stubs, source provenance, and the deductions index
-- **Seven pillar files** — full definitions for persons, locations, objects, events, organizations, deductions, and literary critical reviews per source document
+- **Baseline index** (`sherlock_baseline.ttl`) — schema definitions, recurring characters, entity stubs, source provenance, and the deductions and quotations indexes
+- **Eight pillar files** — full definitions for persons, locations, objects, events, organizations, deductions, quotations, and literary critical reviews per source document
 
-This architecture reduces the generation script's read/write burden from the full ontology (56,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all eight files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
+This architecture reduces the generation script's read/write burden from the full ontology (57,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all nine files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
 
 ### Context Window Management
 
@@ -180,7 +187,7 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 
 **Two-axis person classification.** Persons are classified along two independent axes: ontological status (`FictionalPerson` vs. `RealPerson`, mutually exclusive) and narrative role (`Detective`, `Criminal`, `Victim`, `Client`, etc., freely combinable). This avoids the modeling trap of making roles depend on fictionality. A character like Sherlock Holmes is typed as both `ex:FictionalPerson` and `ex:Detective` — the role class is a subclass of `ex:Person` directly, never nested under `FictionalPerson`.
 
-**Five orthogonal entity pillars.** Every individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap.
+**Five orthogonal entity pillars.** Every narrative individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap. The deductions, quotations, and reviews pillars layer analytical, cultural, and critical dimensions on top of this narrative foundation.
 
 **Cumulative enrichment.** When a character, location, or object appears in multiple works, new facts are added to the existing entity without modifying or removing anything established by earlier sources. Multiple `dc:source` values track which works contributed information. Sherlock Holmes carries source attributions from all sixty works.
 
@@ -191,6 +198,8 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 **Alias and identity handling.** Characters with multiple identities use `skos:altLabel` for display variants, `ex:alias` for in-story assumed names, and `ex:aliasOf`/`ex:hasAlias` object properties for formal identity linking between URI references. This is particularly important for characters like John Douglas / Jack McMurdo / Birdy Edwards in *The Valley of Fear*.
 
 **Deduction modeling.** Each deductive inference made by Holmes (and occasionally by other characters) is captured as a first-class entity with structured properties including the deducer, the observation, the reasoning chain, and the conclusion. The deductions index in the ontology provides forward links from each source document to its extracted deductions, enabling queries like "show all deductions in *The Speckled Band*" or "find all deductions where Holmes reasons from physical evidence."
+
+**Quotation modeling.** Culturally significant quotations are captured using a two-tier structure: individual `ex:Quotation` instances (each linked to its speaker, addressee, location, associated events, and source story) are grouped into `ex:QuoteFamily` entities that bind variant wordings of the same idea across the canon. Each family designates one variant as its canonical form — the wording most widely known in popular culture — and carries narrative annotations for pre-canonical origins, cultural afterlife, and Mandela effects. Families with no canonical variants (quotes famous but not actually present in the canon, such as "Elementary, my dear Watson") are flagged as Mandela-effect-only entries, documenting the gap between popular attribution and textual reality.
 
 **Literary reviews.** Each source document carries a critical literary review analyzing themes, narrative structure, and Doyle's craft, providing a scholarly layer alongside the factual extraction.
 
@@ -271,6 +280,29 @@ WHERE {
     :professorMoriarty ?rel ?target .
     ?target ex:prefLabel ?targetName .
     FILTER (?rel != ex:memberOfOntology)
+}
+```
+
+```sparql
+# All variants in a quote family
+SELECT ?variant ?text ?storyTitle
+WHERE {
+    :qf_eliminatedTheImpossible ex:hasQuoteVariant ?variant .
+    ?variant ex:quoteText ?text ;
+            ex:quoteFromSource ?story .
+    ?story dc:title ?storyTitle .
+}
+```
+
+```sparql
+# All Mandela-effect-only quote families
+SELECT ?family ?label ?canonicalForm ?mandelaEffect
+WHERE {
+    ?family a ex:QuoteFamily ;
+            ex:prefLabel ?label ;
+            ex:canonicalForm ?canonicalForm ;
+            ex:mandelaEffectOnly true ;
+            ex:mandelaEffect ?mandelaEffect .
 }
 ```
 
