@@ -44,8 +44,8 @@ Complete story listing with publication years and source links is encoded in the
 | Metric | Count |
 |--------|-------|
 | OWL classes | 486 |
-| Object properties | 359 |
-| Data properties | 106 |
+| Object properties | 366 |
+| Data properties | 109 |
 | Named individuals (non-deduction, non-quotation) | ~3,490 |
 | Persons (fictional + real) | ~1,000 |
 | Locations | ~930 |
@@ -57,7 +57,7 @@ Complete story listing with publication years and source links is encoded in the
 | Quotation instances | 25 |
 | Literary reviews | 60 (one per source document) |
 | Source documents | 60 |
-| File size | ~3.8 MB, ~57,500 lines |
+| File size | ~4.5 MB, 61,175 lines |
 
 The ontology is serialized in Turtle (.ttl) format and uses W3C standards: OWL 2 for class and property definitions, Dublin Core for provenance metadata, SKOS for alternate labels, and Schema.org for bibliographic typing.
 
@@ -70,7 +70,7 @@ The ontology is organized around eight independently queryable dimensions. The f
 | **Persons** | Agents: fictional characters and historical figures | Holmes, Watson, Irene Adler, Professor Moriarty |
 | **Locations** | Spatial entities at every scale, from rooms to countries | 221B Baker Street, Dartmoor, Vermissa Valley, Agra |
 | **Objects** | Physical things: documents, weapons, animals, vehicles | the Agra treasure, the Blue Carbuncle, the Hound |
-| **Events** | Occurrences with participants and locations | murders, investigations, journeys, trials |
+| **Events** | Occurrences with participants, locations, and narrative sequence | murders, investigations, journeys, trials; coarse event chains per story |
 | **Organizations** | Groups, firms, institutions, criminal enterprises | Scotland Yard, the Scowrers, the Baker Street Irregulars |
 | **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 785 structured deduction instances with observation, reasoning chain, and conclusion |
 | **Quotations** | Culturally significant lines of dialogue and narration | 20 quote families with 25 verified instances, variant tracking, and Mandela-effect documentation |
@@ -81,6 +81,26 @@ The deductions pillar captures each act of reasoning as a first-class entity: wh
 The quotations pillar captures the famous lines that have survived the stories and entered popular culture. Each quotation is modeled as a first-class entity linked to its speaker, addressee(s), location, associated event or deduction, and source story. Related quotations — variant wordings of the same idea across multiple stories — are grouped into quote families, with the most culturally prominent version designated as the canonical form. The pillar also documents Mandela effects: quotes widely attributed to Holmes that do not actually appear in the canon (such as "Elementary, my dear Watson"), with detailed notes on their true origins and the gap between popular belief and textual reality. Pre-canonical origins (such as the Shakespeare source of "The game is afoot") and cultural afterlife (adoption in film, television, philosophy, and everyday speech) are recorded as narrative annotations on each quote family.
 
 The reviews pillar provides a scholarly layer alongside the factual extraction, analyzing each of the sixty works for themes, narrative structure, character development, and Doyle's evolving craft across four decades of writing.
+
+### Narrative Event Sequencing
+
+The events pillar includes a narrative sequencing layer that makes the plot structure of each story explicit and queryable. Each story's major events are linked into an ordered chain using `ex:precedes` and `ex:followsEvent` relationships, with the story document connected to its opening event via `ex:hasFirstEvent`. This allows traversal of a story's complete narrative arc from beginning to end.
+
+Each sequenced event follows a structured **motivation–action–outcome** model:
+
+- **`ex:eventMotivation`** — why the event occurs (a goal, need, or trigger)
+- **`ex:description`** — what happens (participants, locations, actions)
+- **`ex:eventOutcome`** — what results (success, failure, discovery, reversal, resolution)
+
+Events are also tagged with an `ex:narrativeFunction` value indicating their structural role in the story arc: scene-setting, case-introduction, investigation, key-action, reversal, resolution, or aftermath. Finer-grained events that occur within a coarse event (such as a wedding witnessed during a reconnaissance) are linked via `ex:hasSubEvent` / `ex:subEventOf` rather than being placed in the main chain.
+
+Events are sequenced in chronological order as they occurred within the story's timeline — not in the order they are narrated. When Holmes recounts activities to Watson after the fact, those activities are modeled in their chronological position. Backstory narrated by clients (events preceding the story's timeframe) is captured within the description of the event where the narration occurs rather than as separate sequence events.
+
+**Dual-narrative novels.** Two of the four novels — *A Study in Scarlet* and *The Valley of Fear* — contain formally demarcated two-part structures where an extended backstory narrative (set in a different time and place, with its own characters and dramatic arc) runs parallel to the main London investigation. These are modeled as two independent event chains within the same document: the main story (Thread A) is linked via `ex:hasFirstEvent`, and the backstory narrative (Thread B) is linked via `ex:hasBackstoryFirstEvent`. The two chains share the same `ex:eventInStory` document reference but have no cross-thread `ex:precedes` / `ex:followsEvent` links — they are parallel structures, not interleaved. The confession or revelation event in Thread A references Thread B in its description to indicate where the backstory is sequenced.
+
+The remaining two novels — *The Sign of the Four* and *The Hound of the Baskervilles* — use single-thread sequencing, with their backstories captured within confession or retrospection events in the main chain (short-story style), because their backstories are recounted within conversations rather than presented as formally independent narratives.
+
+All four novels have been sequenced, comprising 42 sequence events across six narrative threads: *A Study in Scarlet* (8 Thread A + 6 Thread B), *The Sign of the Four* (8 events), *The Hound of the Baskervilles* (8 events), and *The Valley of Fear* (6 Thread A + 6 Thread B).
 
 ## Source Provenance and RAG Support
 
@@ -167,7 +187,7 @@ Processing sixty works through an LLM with finite context windows required delib
 
 **Atomic script generation.** Structured output files (Turtle, JSON manifests) were always generated by a single Python script writing the complete file. Incremental generation across multiple tool calls — persons in one script, locations in the next — wasted tokens on inter-call narration and risked truncation. For very large entity sets (100+ entities), a two-step accumulator pattern was used: write entity data to an intermediate file first, then assemble the complete output in a second script, with zero narration between calls.
 
-**Custom skills as persistent memory.** Five custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), and `token-checkpoint-protocol` (context window monitoring and checkpoint management). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
+**Custom skills as persistent memory.** Six custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), `token-checkpoint-protocol` (context window monitoring and checkpoint management), and `event-sequencing` (narrative event identification, motivation–action–outcome modeling, chain wiring, and existing event modification for story-level plot sequencing). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
 
 ### Quality Testing and Verification
 
@@ -207,7 +227,7 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 
 Claude participated in this project at multiple levels, not just as an extraction engine:
 
-**Skill development.** Five custom skill files govern the project's methodology. These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop. The skills functioned as Claude's institutional memory, ensuring that lessons learned early in the project persisted across the hundreds of conversation turns required to process the full canon.
+**Skill development.** Six custom skill files govern the project's methodology. These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop. The skills functioned as Claude's institutional memory, ensuring that lessons learned early in the project persisted across the hundreds of conversation turns required to process the full canon.
 
 **Prompt engineering.** The consolidated extraction prompt (over 1,400 lines) evolved across the project as new failure modes were discovered and addressed. Claude helped identify, diagnose, and codify solutions for problems like: regex-based block parsing failing on multi-line descriptions (`re.DOTALL` corruption), enrichment addenda being routed to wrong pillar files, alphabetical insertion algorithms splitting multi-line definitions, triple-quoted strings being misidentified as block boundaries, and punctuation normalization producing double semicolons. Each fix was expressed as both a rule and a code pattern in the prompt, with an explicit failure modes checklist growing to over thirty entries.
 
@@ -221,6 +241,7 @@ Claude participated in this project at multiple levels, not just as an extractio
 - The enrichment protocol (preserving all existing triples, adding only new ones, tracking multi-source provenance) was formalized after early merges accidentally overwrote baseline content.
 - The "Schema Authority Rule" — that the baseline ontology supersedes the reference schema once it contains real content — was introduced to prevent conflicts between the evolving ontology and its bootstrap template.
 - The split-file architecture was adopted when the monolithic ontology file grew too large for efficient single-file processing within token constraints.
+- The event sequencing model — linking story events into ordered chains with motivation, action, and outcome — was developed through a proof-of-concept on "A Scandal in Bohemia" and validated with "The Red-Headed League." The Discrete Outcome Test (if you can't state a single clean outcome, you've conflated two events) emerged as the key principle for determining event boundaries. The model was codified as a dedicated skill (`event-sequencing`) to ensure consistent application across the canon. Extension to novels required two further innovations: a dual-narrative threading model for novels with formally demarcated two-part structures (*A Study in Scarlet*, *The Valley of Fear*), where two parallel event chains share the same document entity but never cross-link; and a classification rule distinguishing novels where backstory is an independent narrative (warranting Thread B) from those where it is told within a confession or retrospection event (*The Sign of the Four*, *The Hound of the Baskervilles*). The reading protocol for novels also required managing context constraints — the full text of a 60,000-word novel must be read before drafting any sequence, but the sequencing output itself (a Python script modifying two files) is comparable in scale to a short story.
 - The anti-curation signal ("if you catch yourself using 'major' or 'notable' to filter, you are curating, not extracting") was added after observing that Claude would sometimes skip minor characters or background locations that nonetheless appear in the text.
 
 ## Usage
@@ -306,9 +327,64 @@ WHERE {
 }
 ```
 
+```sparql
+# Walk a story's narrative event chain in order
+SELECT ?event ?label ?function ?outcome
+WHERE {
+    :scandalInBohemiaDoc ex:hasFirstEvent ?first .
+    ?first ex:precedes* ?event .
+    ?event ex:prefLabel ?label ;
+           ex:narrativeFunction ?function ;
+           ex:eventOutcome ?outcome .
+}
+```
+
+```sparql
+# Walk both threads of a dual-narrative novel
+SELECT ?thread ?event ?label ?function
+WHERE {
+    {
+        BIND ("Thread A" AS ?thread)
+        :valleyOfFearDoc ex:hasFirstEvent ?first .
+        ?first ex:precedes* ?event .
+    } UNION {
+        BIND ("Thread B" AS ?thread)
+        :valleyOfFearDoc ex:hasBackstoryFirstEvent ?first .
+        ?first ex:precedes* ?event .
+    }
+    ?event ex:prefLabel ?label ;
+           ex:narrativeFunction ?function .
+}
+ORDER BY ?thread
+```
+
+## Alternative Serializations
+
+The ontology is maintained in Turtle (.ttl) as its primary format, but two additional serializations are generated for broader tool compatibility and different query paradigms.
+
+### OWL Functional-Style Syntax (`sherlock_holmes_ontology.ofn`)
+
+The Functional-Style Syntax (FSS) serialization is a lossless conversion of the Turtle ontology into the W3C's canonical OWL syntax. Every class, property, individual, axiom, and annotation present in the Turtle is preserved — the two formats are semantically identical. FSS is the native format for OWL reasoners and ontology editors such as Protégé, making it the preferred format for formal ontological analysis, consistency checking, and class hierarchy visualization. The conversion is performed by a custom Python parser (no external RDF libraries) that tokenizes the Turtle, classifies each entity by its OWL role, and emits the corresponding FSS axioms in a structured section order: declarations, class axioms, property axioms, and individual axioms.
+
+### Neo4j Cypher (`sherlock_holmes_ontology_neo4j.cypher`)
+
+The Cypher serialization transforms the ontology into a labeled property graph for Neo4j, enabling a fundamentally different style of querying. Where the Turtle and FSS formats express knowledge as RDF triples (subject–predicate–object) queried with SPARQL, the Neo4j version models the same knowledge as nodes with labels and properties connected by typed relationships, queried with Cypher.
+
+This is not a trivial format change — the translation involves several structural decisions that reflect the differences between the RDF and property graph paradigms:
+
+- **Materialized class hierarchy.** In OWL, an individual typed as `ex:FictionalPerson` is implicitly also a `ex:Person` through the `rdfs:subClassOf` chain, but a query engine must reason over that chain to discover it. In Neo4j, the full label hierarchy is materialized directly onto each node — Sherlock Holmes carries the labels `Detective:FictionalPerson:Person` — so queries at any level of the hierarchy use fast index-backed lookups without runtime reasoning.
+- **Data properties as node properties.** RDF treats data properties as triples (`<Holmes> <firstName> "Sherlock"`), structurally identical to object property triples. Neo4j stores them as key-value properties directly on the node, which is both more natural for property graph users and more efficient for retrieval.
+- **Relationship naming.** OWL object properties use `lowerCamelCase` (`ex:livesAt`); Neo4j conventions use `UPPER_SNAKE_CASE` (`LIVES_AT`). The conversion maps between these conventions systematically.
+- **No `memberOfOntology`.** The `ex:memberOfOntology` annotation, which links every entity to the ontology declaration in the RDF version, is omitted in Neo4j as it adds no queryable value in a property graph context.
+
+The Cypher file uses `MERGE` statements throughout for idempotent execution, meaning the import can be re-run safely against an existing database without creating duplicates.
+
+Both alternative serializations are regenerated from the merged Turtle ontology whenever significant updates are made. Dedicated conversion prompts govern each transformation, encoding the mapping rules, structural decisions, and verification checks needed for reproducible, automated conversion.
+
 ## Tools and Standards
 
-- **Format:** Turtle (.ttl) — W3C RDF 1.1 Turtle serialization
+- **Primary format:** Turtle (.ttl) — W3C RDF 1.1 Turtle serialization
+- **Alternative formats:** OWL Functional-Style Syntax (.ofn) for reasoners and Protégé; Neo4j Cypher (.cypher) for property graph querying
 - **Schema language:** OWL 2
 - **Vocabularies:** Dublin Core (provenance), SKOS (labeling), Schema.org (bibliographic metadata)
 - **Generation environment:** Python 3 scripts within Claude's sandboxed Linux environment
