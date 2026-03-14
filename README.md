@@ -4,6 +4,9 @@
 
 An RDF/OWL ontology extracted from Arthur Conan Doyle's complete Sherlock Holmes canon — four novels and fifty-six short stories — capturing the characters, locations, objects, organizations, events, deductions, quotations, and relationships that constitute the narrative world of the world's most famous detective.
 
+To demonstrate advanced LLM-driven knowledge extraction at scale, I engineered a comprehensive ontology from the entire Arthur Conan Doyle canon — downloadable and query-ready in any RDF-compatible graph database.  The techniques are domain-agnostic. Applied to internal documentation, regulatory frameworks, or operational policies, they accelerate knowledge capture and compress project timelines.
+
+
 ## Why This Exists
 
 In the Sherlock Holmes canon, which characters appear in more than one story? Who are Moriarty's known associates? What are Holmes's deductions in "The Adventure of the Speckled Band"? You could ask an AI chatbot like ChatGPT or Claude, and it might give you the right answers — but it might also make things up. These tools are known to "hallucinate": inventing characters who don't exist, attributing deductions to the wrong story, or confidently describing relationships that Doyle never wrote. They sound authoritative, but they have no reliable way to check their answers against the original texts.
@@ -43,21 +46,22 @@ Complete story listing with publication years and source links is encoded in the
 
 | Metric | Count |
 |--------|-------|
-| OWL classes | 486 |
-| Object properties | 366 |
-| Data properties | 109 |
-| Named individuals (non-deduction, non-quotation) | ~3,490 |
-| Persons (fictional + real) | ~1,000 |
-| Locations | ~930 |
-| Objects | ~650 |
-| Events | ~450 |
-| Organizations | ~150 |
-| Deduction instances | 785 |
+| OWL classes | 517 |
+| Object properties | 392 |
+| Data properties | 118 |
+| Named individuals (non-deduction, non-quotation) | ~3,760 |
+| Persons (fictional + real) | ~1,003 |
+| Locations | ~1,021 |
+| Objects | ~762 |
+| Events | ~724 |
+| Organizations | ~191 |
+| Deduction instances | 788 |
 | Quote families | 20 |
 | Quotation instances | 25 |
 | Literary reviews | 60 (one per source document) |
 | Source documents | 60 |
-| File size | ~4.5 MB, 61,175 lines |
+| Narrative sequence events | 256 (across all 60 stories + 2 backstory threads) |
+| File size | ~4.4 MB, 61,726 lines |
 
 The ontology is serialized in Turtle (.ttl) format and uses W3C standards: OWL 2 for class and property definitions, Dublin Core for provenance metadata, SKOS for alternate labels, and Schema.org for bibliographic typing.
 
@@ -70,9 +74,9 @@ The ontology is organized around eight independently queryable dimensions. The f
 | **Persons** | Agents: fictional characters and historical figures | Holmes, Watson, Irene Adler, Professor Moriarty |
 | **Locations** | Spatial entities at every scale, from rooms to countries | 221B Baker Street, Dartmoor, Vermissa Valley, Agra |
 | **Objects** | Physical things: documents, weapons, animals, vehicles | the Agra treasure, the Blue Carbuncle, the Hound |
-| **Events** | Occurrences with participants, locations, and narrative sequence | murders, investigations, journeys, trials; coarse event chains per story |
+| **Events** | Occurrences with participants, locations, and narrative sequence | murders, investigations, journeys, trials; 256 sequenced events forming ordered narrative chains across all 60 stories |
 | **Organizations** | Groups, firms, institutions, criminal enterprises | Scotland Yard, the Scowrers, the Baker Street Irregulars |
-| **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 785 structured deduction instances with observation, reasoning chain, and conclusion |
+| **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 788 structured deduction instances with observation, reasoning chain, and conclusion |
 | **Quotations** | Culturally significant lines of dialogue and narration | 20 quote families with 25 verified instances, variant tracking, and Mandela-effect documentation |
 | **Reviews** | Literary critical analysis of each source document | themes, narrative structure, Doyle's craft — one per work |
 
@@ -100,7 +104,7 @@ Events are sequenced in chronological order as they occurred within the story's 
 
 The remaining two novels — *The Sign of the Four* and *The Hound of the Baskervilles* — use single-thread sequencing, with their backstories captured within confession or retrospection events in the main chain (short-story style), because their backstories are recounted within conversations rather than presented as formally independent narratives.
 
-All four novels have been sequenced, comprising 42 sequence events across six narrative threads: *A Study in Scarlet* (8 Thread A + 6 Thread B), *The Sign of the Four* (8 events), *The Hound of the Baskervilles* (8 events), and *The Valley of Fear* (6 Thread A + 6 Thread B).
+All sixty works in the canon have been sequenced, comprising 256 sequence events across 62 narrative threads (60 main threads via `ex:hasFirstEvent` plus 2 backstory threads via `ex:hasBackstoryFirstEvent` for *A Study in Scarlet* and *The Valley of Fear*). Short stories typically have 3–5 sequence events each; novels range from 6–8 events per thread.
 
 ## Source Provenance and RAG Support
 
@@ -127,9 +131,9 @@ The merged ontology file is organized in clearly delimited sections:
 2. **Ontology declaration** — title, creator, date, and cumulative source reference list
 3. **Core subproperty definitions** — `ex:prefLabel`, `ex:description`, and `ex:memberOfOntology`, defined as subproperties of SKOS and Dublin Core terms
 4. **Source provenance** — bibliographic records for all sixty works, with plot summaries and source URLs
-5. **Class definitions** — 486 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
-6. **Object property definitions** — 359 properties with domain, range, and inverse declarations
-7. **Data property definitions** — 106 properties with domain and range
+5. **Class definitions** — 517 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
+6. **Object property definitions** — 392 properties with domain, range, and inverse declarations
+7. **Data property definitions** — 118 properties with domain and range
 8. **Recurring characters** — full definitions for characters appearing across many stories (Holmes, Watson, Lestrade, Mrs. Hudson, Mary Morstan, Moriarty, Wiggins, the Baker Street Irregulars)
 9. **Deductions index** — forward links from each source document to its extracted deduction instances
 10. **Quotations index** — forward links from each source document to its extracted quotation instances
@@ -138,7 +142,7 @@ The merged ontology file is organized in clearly delimited sections:
 13. **Objects** — full definitions for documents, weapons, animals, vehicles, and other physical entities
 14. **Events** — full definitions for crimes, investigations, journeys, and other occurrences
 15. **Organizations** — full definitions for institutions, firms, criminal enterprises, and groups
-16. **Deductions** — 785 individual deduction instances capturing Holmes's (and others') reasoning
+16. **Deductions** — 788 individual deduction instances capturing Holmes's (and others') reasoning
 17. **Quotations** — 20 quote families and 25 quotation instances capturing culturally significant lines
 18. **Reviews** — literary critical analysis for each of the sixty source documents
 
@@ -169,7 +173,7 @@ As the ontology grew beyond what could be efficiently processed in a single file
 - **Baseline index** (`sherlock_baseline.ttl`) — schema definitions, recurring characters, entity stubs, source provenance, and the deductions and quotations indexes
 - **Eight pillar files** — full definitions for persons, locations, objects, events, organizations, deductions, quotations, and literary critical reviews per source document
 
-This architecture reduces the generation script's read/write burden from the full ontology (57,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all nine files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
+This architecture reduces the generation script's read/write burden from the full ontology (61,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all nine files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
 
 ### Context Window Management
 
@@ -187,7 +191,7 @@ Processing sixty works through an LLM with finite context windows required delib
 
 **Atomic script generation.** Structured output files (Turtle, JSON manifests) were always generated by a single Python script writing the complete file. Incremental generation across multiple tool calls — persons in one script, locations in the next — wasted tokens on inter-call narration and risked truncation. For very large entity sets (100+ entities), a two-step accumulator pattern was used: write entity data to an intermediate file first, then assemble the complete output in a second script, with zero narration between calls.
 
-**Custom skills as persistent memory.** Six custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), `token-checkpoint-protocol` (context window monitoring and checkpoint management), and `event-sequencing` (narrative event identification, motivation–action–outcome modeling, chain wiring, and existing event modification for story-level plot sequencing). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
+**Custom skills as persistent memory.** Seven custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), `token-checkpoint-protocol` (context window monitoring and checkpoint management), `event-sequencing` (narrative event identification, motivation–action–outcome modeling, chain wiring, and existing event modification for story-level plot sequencing), and `ontology-validation` (comprehensive structural and referential integrity auditing across the split-file architecture). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
 
 ### Quality Testing and Verification
 
@@ -200,6 +204,8 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 **Post-generation verification.** Every generation run verified: each new entity had both a baseline stub and a pillar file definition; each enriched entity's stub had the new `dc:source` added; new schema terms were inserted in correct alphabetical position; no duplicate URIs existed; definitions were properly terminated; and spot-checks confirmed 3–5 entities matched expectations.
 
 **Periodic merge validation.** The merge process performed its own verification suite: entity count reconciliation across all pillar files, schema completeness checks, namespace normalization verification, duplicate subject detection, double-semicolon scanning (indicating punctuation errors), cross-pillar duplicate detection (indicating extraction routing errors), and standalone subject URI line checks to catch post-processing corruption.
+
+**Structural integrity auditing.** After all sixty works were extracted and merged, a comprehensive validation skill (`ontology-validation`) was developed to catch errors that silently accumulate across hundreds of extraction and merge cycles — errors invisible until they corrupt a SPARQL query, a Neo4j import, or a Graph RAG retrieval. The skill codifies over twenty distinct checks organized by severity: untyped entity references (URIs used but never given an `rdf:type` declaration), undefined schema references (predicates or types used in pillar files but never defined in the baseline), broken event chain integrity (missing bidirectional `ex:precedes`/`ex:followsEvent` links), class hierarchy violations (orphan classes, circular subclass chains, disjoint class violations), domain/range violations, missing mandatory annotations, duplicate or near-duplicate schema terms, and semantic consistency checks on class names, property labels, and description patterns. The skill includes a battle-tested Python audit script (`audit_v2.py`) encoding hard-won regex fixes and false-positive suppression patterns discovered through iterative audit runs — such as digit-leading local names being silently missed by naive URI patterns, `rdfs:subClassOf` appearing on continuation lines rather than the subject line, and class-name prefix collisions causing false matches during consolidation. A registry of known issue patterns documents every error class found and resolved during the March 2026 audits, from undefined `owl:inverseOf` targets to near-duplicate class clusters requiring consolidation.
 
 **Standards compliance.** The ontology follows W3C OWL 2 specifications, with every class, property, and individual carrying four mandatory annotations (`ex:prefLabel`, `ex:description`, `ex:memberOfOntology`, `dc:source`). Every object property declares domain and range. Every property definition includes inverse relationships where applicable. Symmetric properties (`ex:isMarriedTo`, `ex:siblingOf`) are declared as `owl:SymmetricProperty`. Disjoint classes (`FictionalPerson` and `RealPerson`) are formally declared.
 
@@ -227,7 +233,7 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 
 Claude participated in this project at multiple levels, not just as an extraction engine:
 
-**Skill development.** Six custom skill files govern the project's methodology. These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop. The skills functioned as Claude's institutional memory, ensuring that lessons learned early in the project persisted across the hundreds of conversation turns required to process the full canon.
+**Skill development.** Seven custom skill files govern the project's methodology. These skills were developed collaboratively through iterative trial and error. When an extraction pass produced errors — duplicate definitions, missed entities, inconsistent formatting, truncated output — those failures were analyzed and encoded as explicit rules in the skill files, creating an improving feedback loop. The skills functioned as Claude's institutional memory, ensuring that lessons learned early in the project persisted across the hundreds of conversation turns required to process the full canon.
 
 **Prompt engineering.** The consolidated extraction prompt (over 1,400 lines) evolved across the project as new failure modes were discovered and addressed. Claude helped identify, diagnose, and codify solutions for problems like: regex-based block parsing failing on multi-line descriptions (`re.DOTALL` corruption), enrichment addenda being routed to wrong pillar files, alphabetical insertion algorithms splitting multi-line definitions, triple-quoted strings being misidentified as block boundaries, and punctuation normalization producing double semicolons. Each fix was expressed as both a rule and a code pattern in the prompt, with an explicit failure modes checklist growing to over thirty entries.
 
@@ -388,7 +394,7 @@ Both alternative serializations are regenerated from the merged Turtle ontology 
 - **Schema language:** OWL 2
 - **Vocabularies:** Dublin Core (provenance), SKOS (labeling), Schema.org (bibliographic metadata)
 - **Generation environment:** Python 3 scripts within Claude's sandboxed Linux environment
-- **Validation:** Automated syntax checks, entity count verification, namespace validation, and manual spot-checking after each extraction and merge cycle
+- **Validation:** Comprehensive structural integrity auditing via a dedicated `ontology-validation` skill with over twenty automated checks, a battle-tested Python audit script (`audit_v2.py`), and a known-issue registry — covering untyped references, schema completeness, event chain integrity, class hierarchy violations, domain/range compliance, duplicate detection, and semantic consistency
 
 ## License
 
