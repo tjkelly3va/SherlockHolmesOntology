@@ -4,14 +4,14 @@
 
 An RDF/OWL ontology extracted from Arthur Conan Doyle's complete Sherlock Holmes canon — four novels and fifty-six short stories — capturing the characters, locations, objects, organizations, events, deductions, quotations, and relationships that constitute the narrative world of the world's most famous detective.
 
-To demonstrate advanced LLM-driven knowledge extraction at scale, I engineered a comprehensive ontology from the entire Arthur Conan Doyle canon — downloadable and query-ready in any RDF-compatible graph database.  The techniques are domain-agnostic. Applied to internal documentation, regulatory frameworks, or operational policies, they accelerate knowledge capture and compress project timelines.
+To demonstrate advanced LLM-driven knowledge extraction at scale, I engineered a comprehensive ontology from the entire Arthur Conan Doyle canon — downloadable and query-ready in any RDF-compatible graph database. The techniques are domain-agnostic. Applied to internal documentation, regulatory frameworks, or operational policies, they accelerate knowledge capture and compress project timelines.
 
 
 ## Why This Exists
 
 In the Sherlock Holmes canon, which characters appear in more than one story? Who are Moriarty's known associates? What are Holmes's deductions in "The Adventure of the Speckled Band"? You could ask an AI chatbot like ChatGPT or Claude, and it might give you the right answers — but it might also make things up. These tools are known to "hallucinate": inventing characters who don't exist, attributing deductions to the wrong story, or confidently describing relationships that Doyle never wrote. They sound authoritative, but they have no reliable way to check their answers against the original texts.
 
-This project takes a different approach. Instead of relying on an AI's memory, it organizes everything from the Holmes stories — every character, location, object, event, organization, deduction, and notable quotation — into a structured knowledge base called an ontology. Think of it as a carefully indexed reference work where every fact is linked back to the specific story it came from. It doesn't guess, and it doesn't fill in gaps. If Holmes made a deduction in "The Speckled Band," it's recorded here with a direct link to that story. If a character appears in three stories, the ontology says exactly three — no more, no less. 
+This project takes a different approach. Instead of relying on an AI's memory, it organizes everything from the Holmes stories — every character, location, object, event, organization, deduction, and notable quotation — into a structured knowledge base called an ontology. Think of it as a carefully indexed reference work where every fact is linked back to the specific story it came from. It doesn't guess, and it doesn't fill in gaps. If Holmes made a deduction in "The Speckled Band," it's recorded here with a direct link to that story. If a character appears in three stories, the ontology says exactly three — no more, no less.
 
 The real power comes from combining these two technologies. An AI chatbot gives you the ability to ask questions in plain English; the ontology gives it a foundation of verified facts to draw on. Together, they can answer complex questions about the Holmes canon conversationally, point you to the specific stories that support each answer, and — just as importantly — hold back when the evidence isn't there rather than making something up.
 
@@ -46,45 +46,94 @@ Complete story listing with publication years and source links is encoded in the
 
 | Metric | Count |
 |--------|-------|
-| OWL classes | 517 |
-| Object properties | 392 |
-| Data properties | 118 |
-| Named individuals (non-deduction, non-quotation) | ~3,760 |
+| OWL classes | 518 |
+| Object properties | 404 |
+| Data properties | 122 |
+| Named individuals (non-deduction, non-quotation) | ~3,704 |
 | Persons (fictional + real) | ~1,003 |
 | Locations | ~1,021 |
-| Objects | ~762 |
+| Objects | ~765 |
 | Events | ~724 |
 | Organizations | ~191 |
-| Deduction instances | 788 |
+| Deduction instances | 787 |
+| Method instances | 583 (across all 60 stories, linked to two SKOS taxonomies) |
+| SKOS technique concepts | 206 (8 domains → 35 disciplines → 163 techniques) |
+| SKOS investigative function concepts | 6 |
 | Quote families | 20 |
 | Quotation instances | 25 |
 | Literary reviews | 60 (one per source document) |
 | Source documents | 60 |
-| Narrative sequence events | 256 (across all 60 stories + 2 backstory threads) |
-| File size | ~4.4 MB, 61,726 lines |
+| Narrative sequence events | 255 (across all 60 stories + 2 backstory threads) |
+| File size | ~5.4 MB, 72,640 lines |
 
 The ontology is serialized in Turtle (.ttl) format and uses W3C standards: OWL 2 for class and property definitions, Dublin Core for provenance metadata, SKOS for alternate labels, and Schema.org for bibliographic typing.
 
-## Eight Orthogonal Pillars
+## Nine Orthogonal Pillars
 
-The ontology is organized around eight independently queryable dimensions. The first five represent the narrative world — every individual descends from exactly one top-level class with no shared parent, ensuring clean categorization. The sixth, seventh, and eighth pillars (deductions, quotations, and reviews) layer analytical, cultural, and critical perspectives on top of the narrative content.
+The ontology is organized around nine independently queryable dimensions. The first five represent the narrative world — every individual descends from exactly one top-level class with no shared parent, ensuring clean categorization. The remaining four pillars (deductions, quotations, reviews, and methods) layer analytical, cultural, critical, and forensic perspectives on top of the narrative content.
 
 | Pillar | Scope | Examples |
 |--------|-------|----------|
 | **Persons** | Agents: fictional characters and historical figures | Holmes, Watson, Irene Adler, Professor Moriarty |
 | **Locations** | Spatial entities at every scale, from rooms to countries | 221B Baker Street, Dartmoor, Vermissa Valley, Agra |
 | **Objects** | Physical things: documents, weapons, animals, vehicles | the Agra treasure, the Blue Carbuncle, the Hound |
-| **Events** | Occurrences with participants, locations, and narrative sequence | murders, investigations, journeys, trials; 256 sequenced events forming ordered narrative chains across all 60 stories |
+| **Events** | Occurrences with participants, locations, and narrative sequence | murders, investigations, journeys, trials; 255 sequenced events forming ordered narrative chains across all 60 stories |
 | **Organizations** | Groups, firms, institutions, criminal enterprises | Scotland Yard, the Scowrers, the Baker Street Irregulars |
-| **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 788 structured deduction instances with observation, reasoning chain, and conclusion |
+| **Deductions** | Sherlock Holmes's (and others') inferential reasoning | 787 structured deduction instances with observation, reasoning chain, and conclusion |
 | **Quotations** | Culturally significant lines of dialogue and narration | 20 quote families with 25 verified instances, variant tracking, and Mandela-effect documentation |
 | **Reviews** | Literary critical analysis of each source document | themes, narrative structure, Doyle's craft — one per work |
+| **Methods** | Forensic techniques and investigative methods applied across the canon | 583 method instances linked to two SKOS taxonomies, covering all 60 stories |
+
+![Ontology Architecture](OntologyArchitecture.svg)
 
 The deductions pillar captures each act of reasoning as a first-class entity: who made the deduction, what was observed, the logical chain connecting observation to conclusion, and the narrative outcome. This enables queries like "find all deductions where Holmes reasons from physical evidence" or "compare deductive methods across the canon."
 
 The quotations pillar captures the famous lines that have survived the stories and entered popular culture. Each quotation is modeled as a first-class entity linked to its speaker, addressee(s), location, associated event or deduction, and source story. Related quotations — variant wordings of the same idea across multiple stories — are grouped into quote families, with the most culturally prominent version designated as the canonical form. The pillar also documents Mandela effects: quotes widely attributed to Holmes that do not actually appear in the canon (such as "Elementary, my dear Watson"), with detailed notes on their true origins and the gap between popular belief and textual reality. Pre-canonical origins (such as the Shakespeare source of "The game is afoot") and cultural afterlife (adoption in film, television, philosophy, and everyday speech) are recorded as narrative annotations on each quote family.
 
 The reviews pillar provides a scholarly layer alongside the factual extraction, analyzing each of the sixty works for themes, narrative structure, character development, and Doyle's evolving craft across four decades of writing.
+
+### Forensic Methods and Investigative Techniques
+
+The methods pillar captures every application of an investigative technique across the canon as a first-class entity, creating a queryable forensic record of how Holmes and other characters actually solve cases. Each of the 583 method instances documents who applied the technique, what specific method was used, what investigative function it served, whether it succeeded or failed, how it links to the deductions and events pillars, and what textual evidence supports it.
+
+The pillar is structured around two SKOS (Simple Knowledge Organization System) taxonomies that classify methods along orthogonal axes:
+
+**Taxonomy 1: Investigative Techniques** — A three-tier hierarchy classifying the specific methods employed:
+
+| Tier | Count | Examples |
+|------|-------|----------|
+| **Domains** (8) | 8 top-level categories | Physical Evidence Examination, Document & Record Analysis, Surveillance & Intelligence Gathering, Chemical & Laboratory Analysis, Interrogation & Interview, Logical Reconstruction & Reasoning, Reference Research & Knowledge Application, Experimental Methods & Provocation |
+| **Disciplines** (35) | Mid-level groupings within each domain | Footprint & Track Analysis, Handwriting Analysis, Tobacco Analysis, Disguise & Infiltration, Witness Questioning |
+| **Techniques** (163) | Specific named methods | `:tobaccoAshClassification`, `:bootShoeTypeIdentification`, `:disguisedIdentityInfiltration`, `:bookCipherDecryption`, `:magnifyingGlassExamination` |
+
+Each technique concept carries a SKOS definition, a `skos:broader` link to its parent discipline, and the discipline in turn links to its parent domain — enabling queries at any level of granularity.
+
+**Taxonomy 2: Investigative Functions** — A flat six-concept vocabulary classifying the purpose each technique serves in the investigation:
+
+| Function | Definition |
+|----------|------------|
+| `:fnIdentification` | Determining the class, origin, or nature of evidence |
+| `:fnClassification` | Placing evidence or subjects into known categories |
+| `:fnIndividualization` | Narrowing to a specific individual or unique source |
+| `:fnAssociation` | Linking a person, object, or event to the crime or to each other |
+| `:fnReconstruction` | Rebuilding the sequence, timing, or circumstances of events |
+| `:fnVerification` | Confirming or refuting a specific hypothesis or account |
+
+**Cross-pillar linkages.** Each method instance connects to multiple pillars through typed predicates:
+
+| Predicate | Target Pillar | Purpose |
+|-----------|--------------|---------|
+| `ex:hasTechnique` | SKOS Technique Taxonomy | Classifies the specific method used |
+| `ex:hasInvestigativeFunction` | SKOS Function Taxonomy | Classifies the purpose the method served |
+| `ex:methodPractitioner` | Persons | Identifies who applied the technique (not always Holmes — 17 distinct practitioners across the canon) |
+| `ex:supportsDeduction` | Deductions | Links to the formal deduction(s) this technique enabled |
+| `ex:techniqueEmployedIn` | Events | Links to the narrative event where the technique was applied |
+| `ex:examinesEvidence` | Objects | Links to the physical evidence examined |
+| `ex:methodInStory` | Source Documents | Provenance to the specific story |
+
+This cross-pillar architecture means a single SPARQL query can trace a complete investigative chain: from the technique used, through the evidence examined, to the deduction reached, within the narrative event where it occurred, attributed to the story that records it. The methods pillar does not duplicate the deductions pillar — it captures the *how* (what technique was applied, by whom, to what evidence) while the deductions pillar captures the *what* (the logical chain from observation to conclusion). Many deductions have a corresponding method instance; some do not (social observations, theoretical reasoning), and this asymmetry is intentional.
+
+The 583 method instances span all 60 stories in the canon and document 17 distinct practitioners, including Holmes (535 instances), Watson (23), Stanley Hopkins (5), Lestrade (3), Inspector Baynes (3), Mycroft Holmes (2), and ten others ranging from Irene Adler to Birdy Edwards. Failed methods — techniques competently applied but yielding incorrect conclusions — are documented with `ex:methodSuccessful false`, and methodologically significant innovations are flagged with `ex:methodNovelty` annotations documenting their place in Holmes's evolving practice.
 
 ### Narrative Event Sequencing
 
@@ -104,7 +153,7 @@ Events are sequenced in chronological order as they occurred within the story's 
 
 The remaining two novels — *The Sign of the Four* and *The Hound of the Baskervilles* — use single-thread sequencing, with their backstories captured within confession or retrospection events in the main chain (short-story style), because their backstories are recounted within conversations rather than presented as formally independent narratives.
 
-All sixty works in the canon have been sequenced, comprising 256 sequence events across 62 narrative threads (60 main threads via `ex:hasFirstEvent` plus 2 backstory threads via `ex:hasBackstoryFirstEvent` for *A Study in Scarlet* and *The Valley of Fear*). Short stories typically have 3–5 sequence events each; novels range from 6–8 events per thread.
+All sixty works in the canon have been sequenced, comprising 255 sequence events across 62 narrative threads (60 main threads via `ex:hasFirstEvent` plus 2 backstory threads via `ex:hasBackstoryFirstEvent` for *A Study in Scarlet* and *The Valley of Fear*). Short stories typically have 3–5 sequence events each; novels range from 6–8 events per thread.
 
 ## Source Provenance and RAG Support
 
@@ -131,9 +180,9 @@ The merged ontology file is organized in clearly delimited sections:
 2. **Ontology declaration** — title, creator, date, and cumulative source reference list
 3. **Core subproperty definitions** — `ex:prefLabel`, `ex:description`, and `ex:memberOfOntology`, defined as subproperties of SKOS and Dublin Core terms
 4. **Source provenance** — bibliographic records for all sixty works, with plot summaries and source URLs
-5. **Class definitions** — 517 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
-6. **Object property definitions** — 392 properties with domain, range, and inverse declarations
-7. **Data property definitions** — 118 properties with domain and range
+5. **Class definitions** — 518 classes sorted alphabetically, with explicit `rdfs:subClassOf` hierarchy
+6. **Object property definitions** — 404 properties with domain, range, and inverse declarations
+7. **Data property definitions** — 122 properties with domain and range
 8. **Recurring characters** — full definitions for characters appearing across many stories (Holmes, Watson, Lestrade, Mrs. Hudson, Mary Morstan, Moriarty, Wiggins, the Baker Street Irregulars)
 9. **Deductions index** — forward links from each source document to its extracted deduction instances
 10. **Quotations index** — forward links from each source document to its extracted quotation instances
@@ -142,9 +191,10 @@ The merged ontology file is organized in clearly delimited sections:
 13. **Objects** — full definitions for documents, weapons, animals, vehicles, and other physical entities
 14. **Events** — full definitions for crimes, investigations, journeys, and other occurrences
 15. **Organizations** — full definitions for institutions, firms, criminal enterprises, and groups
-16. **Deductions** — 788 individual deduction instances capturing Holmes's (and others') reasoning
+16. **Deductions** — 787 individual deduction instances capturing Holmes's (and others') reasoning
 17. **Quotations** — 20 quote families and 25 quotation instances capturing culturally significant lines
 18. **Reviews** — literary critical analysis for each of the sixty source documents
+19. **Methods** — two SKOS taxonomies (techniques and investigative functions) plus 583 method instances documenting investigative techniques applied across the canon
 
 ## How the Ontology Was Built
 
@@ -168,12 +218,13 @@ Each work followed a consistent pipeline governed by a consolidated extraction p
 
 ### Split-File Architecture
 
-As the ontology grew beyond what could be efficiently processed in a single file, a split-file architecture was adopted. The ontology is maintained as nine working files:
+As the ontology grew beyond what could be efficiently processed in a single file, a split-file architecture was adopted. The ontology is maintained as ten working files:
 
 - **Baseline index** (`sherlock_baseline.ttl`) — schema definitions, recurring characters, entity stubs, source provenance, and the deductions and quotations indexes
 - **Eight pillar files** — full definitions for persons, locations, objects, events, organizations, deductions, quotations, and literary critical reviews per source document
+- **Methods pillar** (`sherlock_methods.ttl`) — two SKOS taxonomies and 583 method instances, maintained as a separate file due to its distinct structure (SKOS concept schemes plus `ex:InvestigativeMethod` instances rather than standard entity definitions)
 
-This architecture reduces the generation script's read/write burden from the full ontology (61,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all nine files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification.
+This architecture reduces the generation script's read/write burden from the full ontology (72,000+ lines) to approximately 4,500 lines per story. A periodic merge process combines all ten files into a single `sherlock_holmes_ontology.ttl` for querying, validation, and distribution. The merge process itself is governed by a dedicated merge prompt that handles namespace normalization, enrichment addendum consolidation, cross-pillar duplicate detection, and comprehensive verification including a full ontology structural integrity audit per the `ontology-validation` skill.
 
 ### Context Window Management
 
@@ -191,7 +242,7 @@ Processing sixty works through an LLM with finite context windows required delib
 
 **Atomic script generation.** Structured output files (Turtle, JSON manifests) were always generated by a single Python script writing the complete file. Incremental generation across multiple tool calls — persons in one script, locations in the next — wasted tokens on inter-call narration and risked truncation. For very large entity sets (100+ entities), a two-step accumulator pattern was used: write entity data to an intermediate file first, then assemble the complete output in a second script, with zero narration between calls.
 
-**Custom skills as persistent memory.** Seven custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading and entity extraction rules), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), `token-checkpoint-protocol` (context window monitoring and checkpoint management), `event-sequencing` (narrative event identification, motivation–action–outcome modeling, chain wiring, and existing event modification for story-level plot sequencing), and `ontology-validation` (comprehensive structural and referential integrity auditing across the split-file architecture). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
+**Custom skills as persistent memory.** Seven custom skill files served as Claude's institutional memory across conversation boundaries: `ontology-extraction` (close reading, entity extraction rules, and methods pillar extraction guidance including the Close Reading at Scale protocol for documents over 40,000 words), `ontology-cumulative-merge` (enrichment protocol and merge discipline), `turtle-style-guide` (formatting, naming, and annotation conventions), `large-file-generation` (tool selection and Python-first file creation), `token-checkpoint-protocol` (context window monitoring and checkpoint management), `event-sequencing` (narrative event identification, motivation–action–outcome modeling, chain wiring, and existing event modification for story-level plot sequencing), and `ontology-validation` (comprehensive structural and referential integrity auditing across the split-file architecture). Because each conversation turn starts with a fresh context, these skills ensured that methodology lessons learned from processing *A Study in Scarlet* were still applied fifty-eight stories later when processing *The Adventure of Shoscombe Old Place*. Without them, every conversation would have started from scratch.
 
 ### Quality Testing and Verification
 
@@ -213,7 +264,7 @@ Quality assurance was built into every stage of the pipeline, not applied as a p
 
 **Two-axis person classification.** Persons are classified along two independent axes: ontological status (`FictionalPerson` vs. `RealPerson`, mutually exclusive) and narrative role (`Detective`, `Criminal`, `Victim`, `Client`, etc., freely combinable). This avoids the modeling trap of making roles depend on fictionality. A character like Sherlock Holmes is typed as both `ex:FictionalPerson` and `ex:Detective` — the role class is a subclass of `ex:Person` directly, never nested under `FictionalPerson`.
 
-**Five orthogonal entity pillars.** Every narrative individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap. The deductions, quotations, and reviews pillars layer analytical, cultural, and critical dimensions on top of this narrative foundation.
+**Five orthogonal entity pillars.** Every narrative individual descends from exactly one of five top-level classes — `ex:Person`, `ex:Location`, `ex:Object`, `ex:Event`, or `ex:Organization` — ensuring clean categorization and enabling pillar-specific queries without class overlap. The deductions, quotations, reviews, and methods pillars layer analytical, cultural, critical, and forensic dimensions on top of this narrative foundation.
 
 **Cumulative enrichment.** When a character, location, or object appears in multiple works, new facts are added to the existing entity without modifying or removing anything established by earlier sources. Multiple `dc:source` values track which works contributed information. Sherlock Holmes carries source attributions from all sixty works.
 
@@ -364,6 +415,85 @@ WHERE {
 ORDER BY ?thread
 ```
 
+```sparql
+# What forensic techniques does Holmes use most frequently?
+SELECT ?technique ?label (COUNT(?method) AS ?uses)
+WHERE {
+    ?method a ex:InvestigativeMethod ;
+            ex:methodPractitioner :sherlockHolmes ;
+            ex:hasTechnique ?technique .
+    ?technique skos:prefLabel ?label .
+}
+GROUP BY ?technique ?label
+ORDER BY DESC(?uses)
+LIMIT 20
+```
+
+```sparql
+# Trace a complete investigative chain: technique → evidence → deduction → event → story
+SELECT ?method ?methodLabel ?technique ?techLabel ?evidence ?evidenceLabel
+       ?deduction ?dedLabel ?event ?eventLabel ?story ?storyTitle
+WHERE {
+    ?method a ex:InvestigativeMethod ;
+            ex:prefLabel ?methodLabel ;
+            ex:hasTechnique ?technique ;
+            ex:supportsDeduction ?deduction ;
+            ex:techniqueEmployedIn ?event ;
+            ex:methodInStory ?story .
+    ?technique skos:prefLabel ?techLabel .
+    ?deduction ex:prefLabel ?dedLabel .
+    ?event ex:prefLabel ?eventLabel .
+    ?story dc:title ?storyTitle .
+    OPTIONAL { ?method ex:examinesEvidence ?evidence .
+               ?evidence ex:prefLabel ?evidenceLabel . }
+}
+ORDER BY ?storyTitle
+```
+
+```sparql
+# Which non-Holmes practitioners apply investigative techniques, and how often?
+SELECT ?practitioner ?name (COUNT(?method) AS ?instances)
+WHERE {
+    ?method a ex:InvestigativeMethod ;
+            ex:methodPractitioner ?practitioner .
+    ?practitioner ex:prefLabel ?name .
+    FILTER (?practitioner != :sherlockHolmes)
+}
+GROUP BY ?practitioner ?name
+ORDER BY DESC(?instances)
+```
+
+```sparql
+# All failed methods — techniques applied but yielding incorrect conclusions
+SELECT ?method ?label ?practitioner ?practName ?story ?storyTitle
+WHERE {
+    ?method a ex:InvestigativeMethod ;
+            ex:prefLabel ?label ;
+            ex:methodSuccessful false ;
+            ex:methodPractitioner ?practitioner ;
+            ex:methodInStory ?story .
+    ?practitioner ex:prefLabel ?practName .
+    ?story dc:title ?storyTitle .
+}
+ORDER BY ?storyTitle
+```
+
+```sparql
+# Find all methods in a domain (e.g., all Physical Evidence techniques)
+# using the SKOS hierarchy to traverse domain → discipline → technique → instances
+SELECT ?method ?methodLabel ?technique ?techLabel ?discipline ?discLabel
+WHERE {
+    ?discipline skos:broader :physicalEvidenceExamination ;
+                skos:prefLabel ?discLabel .
+    ?technique skos:broader ?discipline ;
+               skos:prefLabel ?techLabel .
+    ?method a ex:InvestigativeMethod ;
+            ex:prefLabel ?methodLabel ;
+            ex:hasTechnique ?technique .
+}
+ORDER BY ?discLabel ?techLabel
+```
+
 ## Alternative Serializations
 
 The ontology is maintained in Turtle (.ttl) as its primary format, but two additional serializations are generated for broader tool compatibility and different query paradigms.
@@ -372,13 +502,13 @@ The ontology is maintained in Turtle (.ttl) as its primary format, but two addit
 
 The Functional-Style Syntax (FSS) serialization is a lossless conversion of the Turtle ontology into the W3C's canonical OWL syntax. Every class, property, individual, axiom, and annotation present in the Turtle is preserved — the two formats are semantically identical. FSS is the native format for OWL reasoners and ontology editors such as Protégé, making it the preferred format for formal ontological analysis, consistency checking, and class hierarchy visualization. The conversion is performed by a custom Python parser (no external RDF libraries) that tokenizes the Turtle, classifies each entity by its OWL role, and emits the corresponding FSS axioms in a structured section order: declarations, class axioms, property axioms, and individual axioms.
 
-### Neo4j Cypher (`sherlock_holmes_ontology_neo4j.cypher`)
+### Neo4j Cypher (`sherlock_holmes_ontology.cypher`)
 
 The Cypher serialization transforms the ontology into a labeled property graph for Neo4j, enabling a fundamentally different style of querying. Where the Turtle and FSS formats express knowledge as RDF triples (subject–predicate–object) queried with SPARQL, the Neo4j version models the same knowledge as nodes with labels and properties connected by typed relationships, queried with Cypher.
 
 This is not a trivial format change — the translation involves several structural decisions that reflect the differences between the RDF and property graph paradigms:
 
-- **Materialized class hierarchy.** In OWL, an individual typed as `ex:FictionalPerson` is implicitly also a `ex:Person` through the `rdfs:subClassOf` chain, but a query engine must reason over that chain to discover it. In Neo4j, the full label hierarchy is materialized directly onto each node — Sherlock Holmes carries the labels `Detective:FictionalPerson:Person` — so queries at any level of the hierarchy use fast index-backed lookups without runtime reasoning.
+- **Materialized class hierarchy.** In OWL, an individual typed as `ex:FictionalPerson` is implicitly also an `ex:Person` through the `rdfs:subClassOf` chain, but a query engine must reason over that chain to discover it. In Neo4j, the full label hierarchy is materialized directly onto each node — Sherlock Holmes carries the labels `Detective:FictionalPerson:Person` — so queries at any level of the hierarchy use fast index-backed lookups without runtime reasoning.
 - **Data properties as node properties.** RDF treats data properties as triples (`<Holmes> <firstName> "Sherlock"`), structurally identical to object property triples. Neo4j stores them as key-value properties directly on the node, which is both more natural for property graph users and more efficient for retrieval.
 - **Relationship naming.** OWL object properties use `lowerCamelCase` (`ex:livesAt`); Neo4j conventions use `UPPER_SNAKE_CASE` (`LIVES_AT`). The conversion maps between these conventions systematically.
 - **No `memberOfOntology`.** The `ex:memberOfOntology` annotation, which links every entity to the ontology declaration in the RDF version, is omitted in Neo4j as it adds no queryable value in a property graph context.
@@ -404,7 +534,7 @@ The ontology structure, extraction methodology, and all associated tooling are o
 
 **Attribution requirement:** Any commercial use of the ontology must include the following attribution: "Sherlock Holmes Narrative Ontology by Tom Kelly and Claude Opus 4.6 (Anthropic), 2026."
 
-**Not permitted:** Sale of the ontology, in whole or in part, as a standalone product is not permitted. Redistribution for sale, whether modified or unmodified, is prohibited.
+**Not permitted:** Sale of the ontology, in whole or in part, as a standalone product or a component of another product is not permitted. Redistribution for sale, whether modified or unmodified, is prohibited.
 
 The source texts from which the ontology was extracted are in the public domain.
 
