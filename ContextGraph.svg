@@ -1,0 +1,108 @@
+<svg width="100%" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+<style>
+  text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .th { font-size: 14px; font-weight: 500; }
+  .ts { font-size: 12px; font-weight: 400; }
+
+  @media (prefers-color-scheme: light) {
+    .layer-events { fill: #E6F1FB; stroke: #185FA5; }
+    .node-events { fill: #B5D4F4; stroke: #185FA5; }
+    .text-events-h { fill: #0C447C; }
+    .text-events-s { fill: #185FA5; }
+    .layer-methods { fill: #E1F5EE; stroke: #0F6E56; }
+    .node-methods { fill: #9FE1CB; stroke: #0F6E56; }
+    .text-methods-h { fill: #085041; }
+    .text-methods-s { fill: #0F6E56; }
+    .layer-deductions { fill: #EEEDFE; stroke: #534AB7; }
+    .node-deductions { fill: #CECBF6; stroke: #534AB7; }
+    .text-deductions-h { fill: #26215C; }
+    .text-deductions-s { fill: #534AB7; }
+    .text-default { fill: #3d3d3a; }
+    .bg-overlay { fill: #ffffff; }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .layer-events { fill: #0C447C; stroke: #85B7EB; }
+    .node-events { fill: #185FA5; stroke: #85B7EB; }
+    .text-events-h { fill: #E6F1FB; }
+    .text-events-s { fill: #B5D4F4; }
+    .layer-methods { fill: #085041; stroke: #5DCAA5; }
+    .node-methods { fill: #0F6E56; stroke: #5DCAA5; }
+    .text-methods-h { fill: #E1F5EE; }
+    .text-methods-s { fill: #9FE1CB; }
+    .layer-deductions { fill: #26215C; stroke: #AFA9EC; }
+    .node-deductions { fill: #534AB7; stroke: #AFA9EC; }
+    .text-deductions-h { fill: #EEEDFE; }
+    .text-deductions-s { fill: #CECBF6; }
+    .text-default { fill: #c2c0b6; }
+    .bg-overlay { fill: #1a1a2e; }
+  }
+</style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<!-- Layer 1: Narrative events -->
+<rect class="layer-events" x="40" y="30" width="600" height="120" rx="16" stroke-width="0.5"/>
+<text class="th text-events-h" x="340" y="58" text-anchor="middle">Layer 1: Narrative events</text>
+<text class="ts text-events-s" x="340" y="78" text-anchor="middle">When and why — temporal and causal scaffolding</text>
+
+<!-- Event chain nodes -->
+<rect class="node-events" x="72" y="95" width="120" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-events-h" x="132" y="117" text-anchor="middle" dominant-baseline="central">Consultation</text>
+<rect class="node-events" x="224" y="95" width="120" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-events-h" x="284" y="117" text-anchor="middle" dominant-baseline="central">Investigation</text>
+<rect class="node-events" x="376" y="95" width="120" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-events-h" x="436" y="117" text-anchor="middle" dominant-baseline="central">Night vigil</text>
+<rect class="node-events" x="528" y="95" width="90" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-events-h" x="573" y="117" text-anchor="middle" dominant-baseline="central">Resolution</text>
+
+<!-- Chain arrows -->
+<line x1="192" y1="113" x2="222" y2="113" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="344" y1="113" x2="374" y2="113" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="496" y1="113" x2="526" y2="113" stroke="#185FA5" stroke-width="1" marker-end="url(#arrow)"/>
+<text class="ts" x="208" y="106" text-anchor="middle" fill="#185FA5">precedes</text>
+<text class="ts" x="360" y="106" text-anchor="middle" fill="#185FA5">precedes</text>
+
+<!-- Layer 2: Investigative methods -->
+<rect class="layer-methods" x="40" y="200" width="600" height="120" rx="16" stroke-width="0.5"/>
+<text class="th text-methods-h" x="340" y="228" text-anchor="middle">Layer 2: Investigative methods</text>
+<text class="ts text-methods-s" x="340" y="248" text-anchor="middle">How — technique, evidence, function, outcome</text>
+
+<!-- Method nodes -->
+<rect class="node-methods" x="88" y="265" width="150" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-methods-h" x="163" y="287" text-anchor="middle" dominant-baseline="central">Scene examination</text>
+<rect class="node-methods" x="270" y="265" width="150" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-methods-h" x="345" y="287" text-anchor="middle" dominant-baseline="central">Ventilator analysis</text>
+<rect class="node-methods" x="452" y="265" width="150" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-methods-h" x="527" y="287" text-anchor="middle" dominant-baseline="central">Object identification</text>
+
+<!-- Layer 3: Deductions -->
+<rect class="layer-deductions" x="40" y="370" width="600" height="120" rx="16" stroke-width="0.5"/>
+<text class="th text-deductions-h" x="340" y="398" text-anchor="middle">Layer 3: Deductions</text>
+<text class="ts text-deductions-s" x="340" y="418" text-anchor="middle">What was concluded — observation, reasoning, validation</text>
+
+<!-- Deduction nodes -->
+<rect class="node-deductions" x="100" y="435" width="200" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-deductions-h" x="200" y="457" text-anchor="middle" dominant-baseline="central">Murder mechanism identified</text>
+<rect class="node-deductions" x="380" y="435" width="200" height="36" rx="6" stroke-width="0.5"/>
+<text class="ts text-deductions-h" x="480" y="457" text-anchor="middle" dominant-baseline="central">Motive: inheritance</text>
+
+<!-- Bridge: Layer 1 → Layer 2 -->
+<line x1="284" y1="131" x2="200" y2="263" stroke="#0F6E56" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="284" y1="131" x2="345" y2="263" stroke="#0F6E56" stroke-width="1" marker-end="url(#arrow)"/>
+<rect class="bg-overlay" x="108" y="168" width="160" height="20" rx="4" opacity="0.85"/>
+<text class="ts" x="188" y="182" text-anchor="middle" fill="#0F6E56">techniqueEmployedIn</text>
+
+<!-- Bridge: Layer 2 → Layer 3 -->
+<line x1="345" y1="301" x2="240" y2="433" stroke="#534AB7" stroke-width="1" marker-end="url(#arrow)"/>
+<line x1="527" y1="301" x2="480" y2="433" stroke="#534AB7" stroke-width="1" marker-end="url(#arrow)"/>
+<rect class="bg-overlay" x="370" y="348" width="155" height="20" rx="4" opacity="0.85"/>
+<text class="ts" x="448" y="362" text-anchor="middle" fill="#534AB7">supportsDeduction</text>
+
+<!-- Circular return: Layer 3 → Layer 1 -->
+<path d="M580 453 C640 453, 660 300, 660 113 C660 60, 640 40, 618 85" fill="none" stroke="#993556" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+<rect class="bg-overlay" x="570" y="220" width="95" height="20" rx="4" opacity="0.85"/>
+<text class="ts" x="618" y="234" text-anchor="middle" fill="#993556">confirmedBy</text>
+
+</svg>
