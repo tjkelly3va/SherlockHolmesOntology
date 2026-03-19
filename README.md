@@ -15,9 +15,23 @@ This project takes a different approach. Instead of relying on an AI's memory, i
 
 The real power comes from combining these two technologies. An AI chatbot gives you the ability to ask questions in plain English; the ontology gives it a foundation of verified facts to draw on. Together, they can answer complex questions about the Holmes canon conversationally, point you to the specific stories that support each answer, and — just as importantly — hold back when the evidence isn't there rather than making something up.
 
+
+## How Ontology-based Knowledge Graphs Support Generative AI
+
+A Large Language Model, or LLM, trained on the Holmes canon would have all 60 stories baked into its weights, meaning it could answer single-story factual questions without any retrieval step at all — it would simply "know" that Holmes disguised himself as a groom in A Scandal in Bohemia. However, the cross-canon analytical questions would be problematic, because training encodes knowledge as statistical patterns in prose, not as structured, queryable relationships. The model might produce a confident-sounding answer to "how many stories feature disguise as a technique," but it would be drawing on fuzzy recall rather than performing an actual count, making it prone to omissions and hallucinations.
+
+Retrieval-Augmented Generation, or RAG, is a technique where an LLM looks up relevant passages from a library of documents before answering a question. For the Sherlock Holmes canon — 60 stories totaling roughly 670,000 words — a basic RAG system works well when the answer lives in a single story and can be found in a few nearby paragraphs. Questions like "What disguise does Holmes use in A Scandal in Bohemia?" or "What does Holmes say about the dog in Silver Blaze?" are straightforward retrieval tasks. The system finds the right chunk of text, hands it to the language model, and gets a reliable answer. Most factual, single-story questions fall into this category.
+
+The limitations appear when questions require connecting information across multiple stories. If you ask "Which locations appear in more than three stories, and what crimes happen at each?" a basic RAG system would need to independently find and cross-reference passages from dozens of stories, then accurately aggregate the results — something language models do unreliably. They tend to recall the most famous examples, miss the rest, and sometimes fill gaps with plausible-sounding but incorrect answers. Any question involving counting, comparing patterns, or tracing relationships across the full canon runs into this wall.
+
+Graph RAG addresses this by pairing the text retrieval system with a structured knowledge graph — in this case, a formal ontology that encodes every character, location, event, deduction, and investigative method across all 60 stories as interconnected data. When a question like "How often does Holmes use a disguise, and how often does it work?" comes in, the system doesn't have to hunt through raw text. Instead, it queries the graph directly for every instance of the disguise technique, checks each one's success or failure flag, and returns a precise answer. The language model's role shifts from "try to piece this together from scattered paragraphs" to "explain these verified results in natural language."
+
+The distinction comes down to what each approach handles well. RAG excels at "what happens in this story" questions where the answer is localized. Graph RAG excels at "what patterns exist across the canon" questions that require aggregation, multi-step reasoning, or structured comparison. By combining both, the system can answer the full range of questions a scholar or enthusiast might ask — from simple factual lookups to complex analytical queries — with sourced, verifiable answers rather than educated guesses.
+
+
 ## Scope
 
-The ontology covers all sixty works in the Sherlock Holmes canon. Source texts were obtained from the public domain archive at [sherlock-holm.es](https://sherlock-holm.es/), and each source document in the ontology includes an `rdfs:seeAlso` link to its plain-text source, supporting ingestion by separate RAG (Retrieval-Augmented Generation) pipelines.
+The Sherlock Holmes Narrative Ontology covers all sixty works in the Sherlock Holmes canon. Source texts were obtained from the public domain archive at [sherlock-holm.es](https://sherlock-holm.es/), and each source document in the ontology includes an `rdfs:seeAlso` link to its plain-text source, supporting ingestion by separate RAG (Retrieval-Augmented Generation) pipelines.
 
 ### Novels
 
