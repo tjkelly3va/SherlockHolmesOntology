@@ -169,6 +169,74 @@ The remaining two novels — *The Sign of the Four* and *The Hound of the Basker
 
 All sixty works in the canon have been sequenced, comprising 255 sequence events across 62 narrative threads (60 main threads via `ex:hasFirstEvent` plus 2 backstory threads via `ex:hasBackstoryFirstEvent` for *A Study in Scarlet* and *The Valley of Fear*). Short stories typically have 3–5 sequence events each; novels range from 6–8 events per thread.
 
+## Ontology Enhancements for LLM Understanding
+
+When an LLM receives knowledge graph data in its prompt — triples describing events, characters, locations, and their relationships — it faces comprehension barriers that traditional ontology consumers like SPARQL engines do not. The LLM sees a property like `ex:precedes` linking two events but has no built-in understanding of whether this means "immediately next in a sequence" or "somewhere earlier in time." It encounters controlled-vocabulary values like `"key-action"` on an event's narrative function with no definition to work from. It finds inverse property pairs without knowing whether both directions are materialized in the data or must be inferred. These gaps between the ontology's formal structure and the LLM's natural-language reasoning are where answers go wrong — not from missing data, but from misinterpreted data.
+
+To close this gap, six annotation properties have been added to the ontology schema, each targeting a specific LLM comprehension need. `ex:llmTraversalHint` provides step-by-step procedures for walking navigable structures like event chains and deduction networks. `ex:llmEnumeratedValues` documents controlled vocabularies with per-value definitions directly on the property. `ex:llmCardinalityNote` and `ex:llmScopingNote` help the LLM calibrate confidence — knowing that a property appears on exactly two documents in the entire ontology, or that each event carries exactly one narrative function, prevents both false negatives and unwarranted hedging. `ex:llmDetailedDefinition` disambiguates similar schema elements, and `ex:llmInverseNote` clarifies whether inverse relationships require inference or are explicitly present in the data.
+
+These annotations are applied to schema elements — classes and properties — not to instance data. 172 annotation instances now cover approximately 90 schema elements across the ontology's structural backbone: the event sequencing chain, the deduction navigation network, the quotation family model, the investigative methods taxonomy, the person classification system, temporal properties, and semantically subtle property clusters where the existing human-readable descriptions alone could mislead an LLM.
+
+The following two examples illustrate how the annotations work in practice. The property `ex:precedes` links one narrative event to the next in a story's event chain. Its original `ex:description` — "Relates an event to the event that immediately follows it in a narrative sequence" — is adequate for a human ontologist but gives the LLM no procedure for reconstructing a story's plot. With LLM annotations added, the definition now carries three supplementary annotations:
+
+```turtle
+ex:precedes a owl:ObjectProperty ;
+    rdfs:domain ex:Event ;
+    rdfs:range ex:Event ;
+    owl:inverseOf ex:followsEvent ;
+    ex:prefLabel "Precedes" ;
+    ex:description "Relates an event to the event that immediately follows
+        it in a narrative sequence." ;
+    ex:llmTraversalHint """To reconstruct the full event sequence of a story:
+        1. Find the story's document entity (e.g., :speckledBandDoc).
+        2. Follow its ex:hasFirstEvent link to reach the first event.
+        3. From that event, follow ex:precedes to the next event. Repeat
+           until no further ex:precedes link exists — that is the final event.
+        4. Each event carries ex:description (what happened),
+           ex:eventMotivation (why), ex:eventOutcome (result), and
+           ex:narrativeFunction (structural role).""" ;
+    ex:llmCardinalityNote """Each event has at most one ex:precedes link.
+        The first event in a chain has no ex:followsEvent; the last event
+        has no ex:precedes. Events are linked only within the same narrative
+        thread.""" ;
+    ex:llmInverseNote """Both ex:precedes and its inverse ex:followsEvent are
+        explicitly materialized in the data. You do not need to infer one
+        from the other.""" ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+```
+
+The second example shows how `ex:llmEnumeratedValues` documents a controlled vocabulary. The property `ex:narrativeFunction` tags each event with its structural role in the story arc — but without the annotation, the LLM encounters string values like `"key-action"` with no definition. The annotation embeds the complete vocabulary directly on the property:
+
+```turtle
+ex:narrativeFunction a owl:DatatypeProperty ;
+    rdfs:domain ex:Event ;
+    rdfs:range xsd:string ;
+    ex:prefLabel "Narrative Function" ;
+    ex:description "A string recording the structural role an event plays
+        in the story arc." ;
+    ex:llmEnumeratedValues """Valid values (closed set):
+        • 'scene-setting' — Establishes context or sets the stage.
+        • 'case-introduction' — The problem is presented to Holmes.
+        • 'investigation' — Information gathering: interviews, evidence
+          examination, surveillance.
+        • 'key-action' — A deliberate intervention: a ruse, trap, or
+          confrontation. Distinguished from 'investigation' by being
+          interventional rather than observational.
+        • 'reversal' — An unexpected turn that changes the case's direction.
+        • 'resolution' — The case concludes: solution revealed, criminal
+          caught.
+        • 'aftermath' — Consequences or reflections after the resolution.""" ;
+    ex:llmCardinalityNote """Each sequenced event has exactly one
+        ex:narrativeFunction value. Not every story uses all seven values.""" ;
+    ex:memberOfOntology ex:SherlockOntology ;
+    dc:source :scandalInBohemiaDoc .
+```
+
+A key architectural decision is the separation between human-oriented and LLM-oriented annotations. The existing `ex:description` on each schema element remains concise and written for human ontologists. The `ex:llm*` properties supplement it with extended procedural guidance optimized for machine reasoning. Both coexist on the same schema elements, each serving its audience without compromising the other. The `ex:llm` prefix in every property name signals to human maintainers that they are writing for a machine reader with specific comprehension needs.
+
+In the Graph RAG pipeline, these annotations are consumed at retrieval time: when the system queries the knowledge graph for instance data to answer a user's question, it also fetches the `ex:llm*` annotations for the schema elements that appear in the results. These are assembled into a Schema Context block placed at the beginning of the LLM's prompt, before the instance data — so the LLM reads the navigation instructions, vocabulary definitions, and structural constraints before encountering the data it needs to interpret. The result is an LLM that can reliably walk event chains, classify story structure, trace deductive reasoning, and answer cross-story comparison questions with the ontology's full structural richness rather than treating its triples as an opaque bag of facts.
+
 ## Source Provenance and RAG Support
 
 Each source document is modeled as a named individual with full bibliographic metadata and a URL to the public domain text:
