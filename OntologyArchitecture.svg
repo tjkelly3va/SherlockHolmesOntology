@@ -91,7 +91,7 @@
 
 <rect class="fill-teal" x="280" y="152" width="110" height="56" rx="8" stroke-width="0.5"/>
 <text class="th text-teal" x="335" y="172" text-anchor="middle" dominant-baseline="central">Objects</text>
-<text class="ts text-teal-sub" x="335" y="192" text-anchor="middle" dominant-baseline="central">~762</text>
+<text class="ts text-teal-sub" x="335" y="192" text-anchor="middle" dominant-baseline="central">~765</text>
 
 <rect class="fill-teal" x="400" y="152" width="110" height="56" rx="8" stroke-width="0.5"/>
 <text class="th text-teal" x="455" y="172" text-anchor="middle" dominant-baseline="central">Events</text>
@@ -106,7 +106,7 @@
 
 <rect class="fill-purple" x="40" y="252" width="148" height="56" rx="8" stroke-width="0.5"/>
 <text class="th text-purple" x="114" y="272" text-anchor="middle" dominant-baseline="central">Deductions</text>
-<text class="ts text-purple-sub" x="114" y="292" text-anchor="middle" dominant-baseline="central">788 instances</text>
+<text class="ts text-purple-sub" x="114" y="292" text-anchor="middle" dominant-baseline="central">787 instances</text>
 
 <rect class="fill-purple" x="198" y="252" width="148" height="56" rx="8" stroke-width="0.5"/>
 <text class="th text-purple" x="272" y="272" text-anchor="middle" dominant-baseline="central">Quotations</text>
@@ -134,13 +134,13 @@
 <text class="th text-amber" x="250" y="440" text-anchor="middle" dominant-baseline="central">35 disciplines</text>
 
 <rect class="fill-amber" x="55" y="466" width="390" height="32" rx="6" stroke-width="0.5"/>
-<text class="th text-amber" x="250" y="482" text-anchor="middle" dominant-baseline="central">123 specific techniques</text>
+<text class="th text-amber" x="250" y="482" text-anchor="middle" dominant-baseline="central">163 specific techniques</text>
 
-<!-- skos:broader arrows -->
+<!-- skos:narrower arrows (parent → child, pointing downward) -->
 <line x1="250" y1="414" x2="250" y2="424" class="stroke-amber" stroke-width="0.8" marker-end="url(#arrow)"/>
 <line x1="250" y1="456" x2="250" y2="466" class="stroke-amber" stroke-width="0.8" marker-end="url(#arrow)"/>
-<text class="ts text-amber-sub" x="270" y="420">skos:broader</text>
-<text class="ts text-amber-sub" x="270" y="462">skos:broader</text>
+<text class="ts text-amber-sub" x="270" y="420">skos:narrower</text>
+<text class="ts text-amber-sub" x="270" y="462">skos:narrower</text>
 
 <!-- Function taxonomy -->
 <rect class="fill-pink" x="474" y="352" width="166" height="170" rx="12" stroke-width="0.5"/>
